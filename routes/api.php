@@ -11,4 +11,5 @@ Route::group(['middleware' => 'apiJwt'], function () {
     Route::post('auth/refresh', 'AuthController@refresh');
     Route::post('auth/validate', 'AuthController@tokenIsValidate');
     Route::put('auth/changePassword', 'AuthController@changePassword');
+    Route::resource('categories', 'CategoryController');
 });
