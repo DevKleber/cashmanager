@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Helpers;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -65,27 +64,24 @@ class User extends Authenticatable implements JWTSubject
 
     public static function recoverPassword($request)
     {
-        $cpf = Helpers::removerCaracteresEspeciaisEspacos($request['cpf']);
-        $employee = \App\Funcionario::getEmployeeByEmailAndCpf($request['email'], $cpf);
-        if (!$employee) {
-            return response(['error' => 'E-mail ou cpf incorreto'], 400);
+        $userAr = self::where('email', $request['email'])->first();
+        $user = self::find($userAr['id']);
+
+        if (!$user) {
+            return response(['error' => 'Dados inválidos'], 400);
         }
 
-        $funcionario = \App\Funcionario::find($employee->id_pessoa);
-        if (!$funcionario) {
-            return response(['response' => 'Funcionario Não encontrado'], 400);
-        }
         $password = Str::random(8);
-        $employee['password'] = $password;
-        $funcionario->password = \Hash::make(($password));
-        $funcionario->bo_mudar_senha = true;
+        $user->password = \Hash::make(($password));
 
-        if (!$funcionario->update()) {
-            return response(['response' => 'Erro ao alterar'], 400);
+        // TODO: faltando criar as tabelas de job
+        // \App\Email::sendEmailNewCount($user);
+
+        if (!$user->save()) {
+            return response(['response' => 'categoria não foi atualizado'], 400);
         }
-        \App\Email::sendEmailNewCount($employee);
 
-        return response(['response' => 'Atualizado com sucesso']);
+        return response($user);
     }
 
     public static function changePassword($request, $id_pessoa)
@@ -130,5 +126,15 @@ class User extends Authenticatable implements JWTSubject
             'monkey',
             'dragon',
         ];
+    }
+
+    public static function passwordIsWeak($password)
+    {
+        $pass = array_flip(self::getWorstPassword());
+        if (isset($pass[$password])) {
+            return true;
+        }
+
+        return false;
     }
 }

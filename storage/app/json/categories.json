@@ -1,0 +1,254 @@
+{
+    "dados": {
+        "pais": [
+            {
+                "no_categoria": "Moradia",
+                "icon": "fa fa-home",
+                "filhas": [
+                    {
+                        "no_categoria": "Agua",
+                        "icon": "fa fa-tint"
+                    },
+                    {
+                        "no_categoria": "Aluguel",
+                        "icon": "fa fa-cloud-moon-rain"
+                    },
+                    {
+                        "no_categoria": "Energia",
+                        "icon": "fa fa-plug"
+                    },
+                    {
+                        "no_categoria": "Gás",
+                        "icon": "fa fa-fire"
+                    },
+                    {
+                        "no_categoria": "Internet",
+                        "icon": "fa fa-ethernet"
+                    },
+                    {
+                        "no_categoria": "IPTU",
+                        "icon": "fa fa-skull-crossbones"
+                    },
+                    {
+                        "no_categoria": "Manutenção / Reforma",
+                        "icon": "fa fa-paint-roller"
+                    }
+                ]
+            },
+            {
+                "no_categoria": "Alimentação",
+                "icon": "fa fa-utensils",
+                "filhas": [
+                    {
+                        "no_categoria": "Lanches",
+                        "icon": "fa fa-store"
+                    },
+                    {
+                        "no_categoria": "Mercado",
+                        "icon": "fa fa-cheese"
+                    },
+                    {
+                        "no_categoria": "Padaria",
+                        "icon": "fa fa-cheese"
+                    },
+                    {
+                        "no_categoria": "Suplemento",
+                        "icon": "fa fa-mortar-pestle"
+                    }
+                ]
+            },
+            {
+                "no_categoria": "Saúde",
+                "icon": "fa fa-heartbeat",
+                "filhas": [
+                    {
+                        "no_categoria": "Academia",
+                        "icon": "fa fa-heartbeat"
+                    },
+                    {
+                        "no_categoria": "Consulta",
+                        "icon": "fa fa-diagnoses"
+                    },
+                    {
+                        "no_categoria": "Dentista",
+                        "icon": "fa fa-tooth"
+                    },
+                    {
+                        "no_categoria": "Exame",
+                        "icon": "fa fa-microscope"
+                    },
+                    {
+                        "no_categoria": "Farmácia",
+                        "icon": "fa fa-clinic-medical"
+                    },
+                    {
+                        "no_categoria": "Plano de Saúde",
+                        "icon": "fa fa-heart"
+                    }
+                ]
+            },
+            {
+                "no_categoria": "Educação",
+                "icon": "fa fa-chalkboard-teacher",
+                "filhas": [
+                    {
+                        "no_categoria": "Curso",
+                        "icon": "fa fa-chalkboard"
+                    },
+                    {
+                        "no_categoria": "Curso Udemy",
+                        "icon": "fa fa-chalkboard"
+                    },
+                    {
+                        "no_categoria": "Inglês",
+                        "icon": "fa fa-globe-americas"
+                    },
+                    {
+                        "no_categoria": "Jornais/revistas",
+                        "icon": "fa fa-newspaper"
+                    },
+                    {
+                        "no_categoria": "Livros",
+                        "icon": "fa fa-book"
+                    },
+                    {
+                        "no_categoria": "Material escolar",
+                        "icon": "fa fa-book-open"
+                    }
+                ]
+            },
+            {
+                "no_categoria": "Despesas Pessoais",
+                "icon": "fa fa-meh",
+                "filhas": [
+                    {
+                        "no_categoria": "Cuidados e higiene pessoal",
+                        "icon": "fa fa-soap"
+                    },
+                    {
+                        "no_categoria": "Roupas e acessórios",
+                        "icon": "fa fa-tshirt"
+                    },
+                    {
+                        "no_categoria": "Presentes",
+                        "icon": "fa fa-gift"
+                    }
+                ]
+            },
+            {
+                "no_categoria": "Transporte",
+                "icon": "fa fa-subway",
+                "filhas": [
+                    {
+                        "no_categoria": "Combustível",
+                        "icon": "fa fa-gas-pump"
+                    },
+                    {
+                        "no_categoria": "Estacionamento",
+                        "icon": "fa fa-sign"
+                    },
+                    {
+                        "no_categoria": "IPVA",
+                        "icon": "fa fa-radiation"
+                    },
+                    {
+                        "no_categoria": "Manutenção",
+                        "icon": "fa fa-wrench"
+                    },
+                    {
+                        "no_categoria": "Seguro",
+                        "icon": "fa fa-car-crash"
+                    },
+                    {
+                        "no_categoria": "Transporte público",
+                        "icon": "fa fa-bus"
+                    }
+                ]
+            },
+            {
+                "no_categoria": "Lazer",
+                "icon": "fa fa-laugh-beam",
+                "filhas": [
+                    {
+                        "no_categoria": "Bares e restaurantes",
+                        "icon": "fa fa-utensils"
+                    },
+                    {
+                        "no_categoria": "Cinema",
+                        "icon": "fa fa-film"
+                    },
+                    {
+                        "no_categoria": "Passeios/parques/praia",
+                        "icon": "fa fa-route"
+                    },
+                    {
+                        "no_categoria": "Viagens",
+                        "icon": "fa fa-route"
+                    }
+                ]
+            },
+            {
+                "no_categoria": "Pet",
+                "icon": "fa fa-dog",
+                "filhas": [
+                    {
+                        "no_categoria": "Banho",
+                        "icon": "fa fa-shower"
+                    },
+                    {
+                        "no_categoria": "Medicamentos",
+                        "icon": "fa fa-pills"
+                    },
+                    {
+                        "no_categoria": "Outros",
+                        "icon": "fa fa-paw"
+                    },
+                    {
+                        "no_categoria": "Ração",
+                        "icon": "fa fa-bone"
+                    },
+                    {
+                        "no_categoria": "Tosa",
+                        "icon": "fa fa-cut"
+                    },
+                    {
+                        "no_categoria": "Veterinário",
+                        "icon": "fa fa-head-side-mask"
+                    }
+                ]
+            },
+            {
+                "no_categoria": "Entretenimento",
+                "icon": "fa fa-tv",
+                "filhas": [
+                    {
+                        "no_categoria": "Netflix",
+                        "icon": "fa fa-tv"
+                    },
+                    {
+                        "no_categoria": "Sky",
+                        "icon": "fa fa-satellite"
+                    },
+                    {
+                        "no_categoria": "Spotify",
+                        "icon": "fa fa-headphones"
+                    },
+                    {
+                        "no_categoria": "YouTube",
+                        "icon": "fa fa-play"
+                    }
+                ]
+            },
+            {
+                "no_categoria": "Demais despesas",
+                "icon": "fa fa-th",
+                "filhas": [
+                    {
+                        "no_categoria": "Operadoras de telefonia",
+                        "icon": "fa fa-headset"
+                    }
+                ]
+            }
+        ]
+    }
+}
