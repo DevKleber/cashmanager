@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Helpers;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -16,7 +15,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'login' => 'required|string',
+            'email' => 'required|string',
             'password' => 'required|string',
         ]);
 
@@ -24,25 +23,12 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $credentials = $request->only(['login', 'password']);
-        $credentials['login'] = Helpers::removerCaracteresEspeciaisEspacos($credentials['login']);
+        $credentials = $request->only(['email', 'password']);
         if (!$token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         return $this->respondWithToken($token);
-    }
-
-    // @webipe@
-
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function me()
-    {
-        return  \App\Funcionario::getEmployee(auth('api')->user()->id_pessoa);
     }
 
     public function changePassword(Request $request)
@@ -68,7 +54,7 @@ class AuthController extends Controller
             return response(['response' => 'Senha tem que ser diferente do nome'], 400);
         }
 
-        return  \App\User::changePassword($dados, $id_pessoa);
+        return \App\User::changePassword($dados, $id_pessoa);
     }
 
     /**
@@ -92,15 +78,13 @@ class AuthController extends Controller
     {
         return $this->respondWithToken(auth('api')->refresh());
     }
+
     public function tokenIsValidate()
     {
         if (!auth()->validate()) {
             return response(['error' => 'Token is Invalid'], 400);
         }
-
     }
-
-
 
     public function recoverPassword(Request $request)
     {
@@ -116,13 +100,11 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        $me = $this->me();
-
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60,
-            'me' => $me['employee'],
+            'me' => auth('api')->user(),
         ]);
     }
 }
