@@ -11,7 +11,7 @@ class Category extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'id_category_parent', 'name', 'is_active', 'created_at', 'updated_at', 'icon', 'is_income', 'id_user'];
 
-    public static function categoriaDespesas($id_usuario)
+    public static function saveCategoryAutomatically($id)
     {
         $json = Storage::disk('local')->get('/json/categories.json');
         $json = json_decode($json, true);
@@ -19,20 +19,20 @@ class Category extends Model
         foreach ($json['dados']['pais'] as $key => $value) {
             $request['name'] = $value['no_categoria'];
             $request['id_category_parent'] = null;
-            $request['id_user'] = $id_usuario;
+            $request['id_user'] = $id;
             $request['icon'] = $value['icon'];
-            $categoriaDespesa = self::create($request);
-            if (!$categoriaDespesa) {
+            $categories = self::create($request);
+            if (!$categories) {
                 return false;
             }
 
             foreach ($value['filhas'] as $key => $filhas) {
                 $request['name'] = $filhas['no_categoria'];
-                $request['id_category_parent'] = $categoriaDespesa->id_categoria_despesa;
-                $request['id_user'] = $id_usuario;
+                $request['id_category_parent'] = $categories->id_category_parent;
+                $request['id_user'] = $id;
                 $request['icon'] = $filhas['icon'];
-                $categoriaDespesaFilhas = self::create($request);
-                if (!$categoriaDespesaFilhas) {
+                $subCategories = self::create($request);
+                if (!$subCategories) {
                     return false;
                 }
             }
