@@ -1,0 +1,264 @@
+openapi: 3.0.1
+info:
+  title: CashManager
+  description: API para gerenciar suas financas
+  contact:
+    name: Cash Manager
+    url: "http://127.0.0.1:8000/api"
+  version: "1.0"
+
+externalDocs:
+  url: "http://127.0.0.1:8000/docs"
+
+servers:
+  - url: "http://127.0.0.1:8000/api"
+    description: Desenvolvimento
+  - url: "http://127.0.0.1:8000/api"
+    description: Homologação
+  - url: "http://127.0.0.1:8000/api"
+    description: Produção
+tags:
+  - name: auth
+    description: Recursos relacionados ao usuário.
+
+paths:
+
+
+  ##
+  # ---------------------------------------------------------------------------------------------------------------
+  # Regras do usuário
+  # ---------------------------------------------------------------------------------------------------------------
+  ##
+  /auth/login:
+    post:
+      summary: Autenticação
+      description: Gerando token para futuras requisições.
+      parameters:
+        - name: Authorization
+          in: header
+          description: |-
+            É um "token" de acesso fornecido pelo OAuth 2.0.
+            Ex: Bearer [ACCESS_TOKEN]
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: kakarotto@songoku.com
+                  description: E-mail informado ao criar a conta.
+                password:
+                  type: string
+                  example:
+                  description: Senha informada ao criar a conta.
+
+              required:
+                - email
+                - password
+        required: true
+        description: ""
+      responses:
+        "200":
+          description: CRIADO. A solicitação foi atendida e resultou em um novo recurso sendo criado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: Token de acesso
+                    example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYxOTMwOTQzMCwiZXhwIjoxNjIxOTAxNDMwLCJuYmYiOjE2MTkzMDk0MzAsImp0aSI6IkF5cXUxMWJrNTlwNUFMdEoiLCJzdWIiOjEsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.eoZd"
+                  token_type:
+                    type: string
+                    description: Tipo do token
+                    example: bearer
+                  expires_in:
+                    type: string
+                    description: Tempo do token
+                    example: 2592000
+
+                  me:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: Código do usuário
+                        example: 32
+                      name:
+                        type: string
+                        description: Nome do usuário.
+                        example: "Kakarotto"
+                      email:
+                        type: string
+                        description: e-mail
+                        example: Kakarotto@SonGoku.com
+                      email_verified_at:
+                        type: string
+                        description: Data que o usuário validou seu e-mail
+                        example:
+                      created_at:
+                        type: string
+                        description: Data do cadastro
+                      updated_at:
+                        type: string
+                        description: Data da última alteração.
+
+        "422":
+          description: "Campos obrigatórios"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro"
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro"
+      tags:
+        - auth
+    parameters: []
+
+  /auth/me:
+    get:
+      summary: Detalhando usuário
+      operationId: consultaQrCodeArrecadacao
+      responses:
+        "200":
+          description: SUCESSO. A requisição foi atendida pelo servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Código do usuário
+                    example: 32
+                  name:
+                    type: string
+                    description: Nome do usuário.
+                    example: "Kakarotto"
+                  email:
+                    type: string
+                    description: email
+                    example: Kakarotto@SonGoku.com
+                  email_verified_at:
+                    type: string
+                    description: Data que o usuário validou seu e-mail
+                    example:
+                  created_at:
+                    type: string
+                    description: Data do cadastro
+                  updated_at:
+                    type: string
+                    description: Data da última alteração.
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro"
+
+      description: Detalhando usuário logado.
+
+      tags:
+        - auth
+
+
+  ##
+  # ---------------------------------------------------------------------------------------------------------------
+  # Regras da Category
+  # ---------------------------------------------------------------------------------------------------------------
+  ##
+
+
+  ##
+  # ---------------------------------------------------------------------------------------------------------------
+  # Regras da Banking Institution
+  # ---------------------------------------------------------------------------------------------------------------
+  ##
+
+
+  ##
+  # ---------------------------------------------------------------------------------------------------------------
+  # Regras da Planned expenses
+  # ---------------------------------------------------------------------------------------------------------------
+  ##
+
+
+  ##
+  # ---------------------------------------------------------------------------------------------------------------
+  # Regras da Account - Wallet
+  # ---------------------------------------------------------------------------------------------------------------
+  ##
+
+
+  ##
+  # ---------------------------------------------------------------------------------------------------------------
+  # Regras da Credit card
+  # ---------------------------------------------------------------------------------------------------------------
+  ##
+
+
+  ##
+  # ---------------------------------------------------------------------------------------------------------------
+  # Regras da Transaction Expense
+  # ---------------------------------------------------------------------------------------------------------------
+  ##
+
+
+  ##
+  # ---------------------------------------------------------------------------------------------------------------
+  # Regras da Income Transaction
+  # ---------------------------------------------------------------------------------------------------------------
+  ##
+
+components:
+  schemas:
+    Erro:
+      title: Erro
+      type: object
+      description: Representa os campos de erro de resposta do acionamento de um recurso.
+      properties:
+        erros:
+          type: array
+          items:
+            type: object
+            properties:
+              codigo:
+                type: string
+                example: "9999999"
+                description: Código da mensagem de erro.
+              versao:
+                type: string
+                example: "1"
+                description: Versão da mensagem de erro.
+              mensagem:
+                type: string
+                example: O campo CPF não foi informado ou está inválido
+                description: Texto da mensagem de erro.
+              ocorrencia:
+                type: string
+                example: bxds-cald-a1
+                description: Código da ocorrência que identifica o erro internamente no BB.
+            required:
+              - codigo
+              - versao
+              - mensagem
+              - ocorrencia
+
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for documentation purposes

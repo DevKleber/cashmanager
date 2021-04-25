@@ -31,6 +31,10 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
+    public function me(){
+        return \App\User::find(auth('api')->user()->id);
+    }
+
     public function changePassword(Request $request)
     {
         $id_pessoa = auth('api')->user()->id_pessoa;
