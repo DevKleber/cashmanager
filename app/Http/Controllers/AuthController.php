@@ -31,18 +31,67 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-    public function me(){
+    public function newAccount(Request $request)
+    {
+        if (!filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
+            return response(['response' => 'E-mail inválido'], 400);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        \DB::beginTransaction();
+
+        $accountAlreadyExists = \App\User::where('email', $request['email'])->first();
+        if ($accountAlreadyExists) {
+            return response(['response' => 'Dados indisponíveis'], 400);
+        }
+
+        $firstName = current(explode(' ', $request['name']));
+        $firstNameToUpperCase = strtoupper($firstName);
+
+        if ($firstNameToUpperCase == strtoupper($request['password'])) {
+            return response(['response' => 'Sua senha precisa ser diferente do seu nome'], 400);
+        }
+
+        if (\App\User::passwordIsWeak($request['password'])) {
+            return response(['response' => 'Senha informada é muito fraca'], 400);
+        }
+
+        $request['password'] = bcrypt($request['password']);
+        $user = \App\User::create($request->all());
+
+        $saveCategories = \App\Category::saveCategoryAutomatically($user->id);
+        if (!$saveCategories) {
+            \DB::rollback();
+
+            return response(['response' => 'Erro ao criar categorias. Entre em contato'], 400);
+        }
+        \DB::commit();
+
+        return $user;
+    }
+
+    public function me()
+    {
         return \App\User::find(auth('api')->user()->id);
     }
 
     public function changePassword(Request $request)
     {
-        $id_pessoa = auth('api')->user()->id_pessoa;
+        $id = auth('api')->user()->id;
         $dados = $request->only(['currentPassword', 'newPassword', 'confirmPassword']);
-        $employee = \App\Funcionario::getEmployee($id_pessoa);
-        $nomeEmployee = strtolower(current(explode(' ', $employee['employee']->no_pessoa)));
+        $user = \App\User::find($id);
+        $nomeEmployee = strtolower(explode(' ', $user->name));
 
-        if (!$id_pessoa) {
+        if (!$id) {
             return response(['error' => 'Unauthorized'], 401);
         }
 
@@ -50,22 +99,17 @@ class AuthController extends Controller
             return response(['response' => 'As senhas não conferem'], 400);
         }
 
-        if (in_array($dados['newPassword'], \App\User::getWorstPassword())) {
-            return response(['response' => 'A senha informada é muito fraca'], 400);
+        if (\App\User::passwordIsWeak($dados['newPassword'])) {
+            return response(['response' => 'Senha informada é muito fraca'], 400);
         }
 
         if ($nomeEmployee == $dados['newPassword']) {
             return response(['response' => 'Senha tem que ser diferente do nome'], 400);
         }
 
-        return \App\User::changePassword($dados, $id_pessoa);
+        return \App\User::changePassword($dados, $id);
     }
 
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function logout()
     {
         auth('api')->logout();
@@ -73,11 +117,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Successfully logged out']);
     }
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function refresh()
     {
         return $this->respondWithToken(auth('api')->refresh());
@@ -92,16 +131,17 @@ class AuthController extends Controller
 
     public function recoverPassword(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
         return \App\User::recoverPassword($request->all());
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     protected function respondWithToken($token)
     {
         return response()->json([
