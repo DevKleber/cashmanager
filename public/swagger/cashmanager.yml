@@ -180,7 +180,171 @@ paths:
   # Regras da Category
   # ---------------------------------------------------------------------------------------------------------------
   ##
+/categories:
+    post:
+      summary: Categorias
+      description: Listando todas as categorias.
+      parameters:
+        - name: Authorization
+          in: header
+          description: |-
+            É um "token" de acesso fornecido pelo OAuth 2.0.
+            Ex: Bearer [ACCESS_TOKEN]
+          required: true
+          schema:
+            type: string
 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_category_parent:
+                  type: int
+                  example: 1
+                  description: Categoria pai.
+                name:
+                  type: string
+                  example: Mercado
+                  description: Nome da categoria.
+                icon:
+                  type: string
+                  example: home
+                  description: Nome do icone da categoria.
+                is_income:
+                  type: boolean
+                  example: true
+                  description: Representa se é uma categoria de entrada ou de saida.
+
+              required:
+                - id_category_parent
+                - name
+                - icon
+                - is_income
+        required: true
+        description: ""
+      responses:
+        "200":
+          description: CRIADO. A solicitação foi atendida e resultou em um novo recurso sendo criado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensagem de retorno
+                    example: "Salvo com sucesso"
+                  dados:
+                    type: object
+                    properties:
+                      id_category_parent:
+                        type: int
+                        example: 1
+                        description: Categoria pai.
+                      name:
+                        type: string
+                        example: Mercado
+                        description: Nome da categoria.
+                      icon:
+                        type: string
+                        example: home
+                        description: Nome do icone da categoria.
+                      is_income:
+                        type: boolean
+                        example: true
+                        description: Representa se é uma categoria de entrada ou de saida.
+
+                  me:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: Código do usuário
+                        example: 32
+                      name:
+                        type: string
+                        description: Nome do usuário.
+                        example: "Kakarotto"
+                      email:
+                        type: string
+                        description: e-mail
+                        example: Kakarotto@SonGoku.com
+                      email_verified_at:
+                        type: string
+                        description: Data que o usuário validou seu e-mail
+                        example:
+                      created_at:
+                        type: string
+                        description: Data do cadastro
+                      updated_at:
+                        type: string
+                        description: Data da última alteração.
+
+        "422":
+          description: "Campos obrigatórios"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro"
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro"
+      tags:
+        - auth
+    parameters: []
+
+  /auth/me:
+    get:
+      summary: Detalhando usuário
+      operationId: consultaQrCodeArrecadacao
+      responses:
+        "200":
+          description: SUCESSO. A requisição foi atendida pelo servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Código do usuário
+                    example: 32
+                  name:
+                    type: string
+                    description: Nome do usuário.
+                    example: "Kakarotto"
+                  email:
+                    type: string
+                    description: email
+                    example: Kakarotto@SonGoku.com
+                  email_verified_at:
+                    type: string
+                    description: Data que o usuário validou seu e-mail
+                    example:
+                  created_at:
+                    type: string
+                    description: Data do cadastro
+                  updated_at:
+                    type: string
+                    description: Data da última alteração.
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro"
+
+      description: Detalhando usuário logado.
+
+      tags:
+        - auth
 
   ##
   # ---------------------------------------------------------------------------------------------------------------
