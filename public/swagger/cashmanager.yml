@@ -26,6 +26,9 @@ tags:
 
   - name: credit-card
     description: Recursos relacionados ao cartão de crédito.
+    
+  - name: accounts
+    description: Recursos relacionados as contas do usuário.
 
 paths:
   ##
@@ -377,29 +380,22 @@ paths:
             schema:
               type: object
               properties:
-                message:
+                id_category_parent:
+                  type: integer
+                  example: 1
+                  description: Categoria pai.
+                name:
                   type: string
-                  description: Mensagem de retorno
-                  example: "Salvo com sucesso"
-                dados:
-                  type: object
-                  properties:
-                    id_category_parent:
-                      type: integer
-                      example: 1
-                      description: Categoria pai.
-                    name:
-                      type: string
-                      example: Mercado
-                      description: Nome da categoria.
-                    icon:
-                      type: string
-                      example: home
-                      description: Nome do icone da categoria.
-                    is_income:
-                      type: boolean
-                      example: true
-                      description: Representa se é uma categoria de entrada ou de saida.
+                  example: Mercado
+                  description: Nome da categoria.
+                icon:
+                  type: string
+                  example: home
+                  description: Nome do icone da categoria.
+                is_income:
+                  type: boolean
+                  example: true
+                  description: Representa se é uma categoria de entrada ou de saida.
         required: true
         description: ""
       responses:
@@ -450,7 +446,31 @@ paths:
               schema:
                 type: object
                 properties:
-                  dados:
+                  id:
+                    type: number
+                    description: identificador unico da categoria.
+                    example: 1
+                  id_category_parent:
+                    type: number
+                    description: Identificador da categoria pai
+                    example: 2
+                  name:
+                    type: string
+                    description: Nome da categoria
+                    example: Casa
+                  is_active:
+                    type: boolean
+                    description: Status da categoria (Ativo | Inativo).
+                    example: 1
+                  created_at:
+                    type: string
+                    description: Data da criação do registro
+                    example: "2021-04-25 18:49:20"
+                  updated_at:
+                    type: string
+                    description: Data da ultima alteração do registro
+                    example: "2021-04-25 18:49:20"
+                  children:
                     type: array
                     items:
                       type: object
@@ -458,7 +478,7 @@ paths:
                         id:
                           type: number
                           description: identificador unico da categoria.
-                          example: 1
+                          example: 3
                         id_category_parent:
                           type: number
                           description: Identificador da categoria pai
@@ -466,7 +486,7 @@ paths:
                         name:
                           type: string
                           description: Nome da categoria
-                          example: Casa
+                          example: Escola
                         is_active:
                           type: boolean
                           description: Status da categoria (Ativo | Inativo).
@@ -479,35 +499,6 @@ paths:
                           type: string
                           description: Data da ultima alteração do registro
                           example: "2021-04-25 18:49:20"
-                        children:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              id:
-                                type: number
-                                description: identificador unico da categoria.
-                                example: 3
-                              id_category_parent:
-                                type: number
-                                description: Identificador da categoria pai
-                                example: 2
-                              name:
-                                type: string
-                                description: Nome da categoria
-                                example: Escola
-                              is_active:
-                                type: boolean
-                                description: Status da categoria (Ativo | Inativo).
-                                example: 1
-                              created_at:
-                                type: string
-                                description: Data da criação do registro
-                                example: "2021-04-25 18:49:20"
-                              updated_at:
-                                type: string
-                                description: Data da ultima alteração do registro
-                                example: "2021-04-25 18:49:20"
         "500":
           description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
       tags:
@@ -532,40 +523,46 @@ paths:
               schema:
                 type: object
                 properties:
-                  dados:
-                    type: object
-                    properties:
-                      id:
-                        type: number
-                        description: identificador unico da categoria.
-                        example: 1
-                      id_category_parent:
-                        type: number
-                        description: Identificador da categoria pai
-                        example: 2
-                      name:
-                        type: string
-                        description: Nome da categoria
-                        example: Casa
-                      is_active:
-                        type: boolean
-                        description: Status da categoria (Ativo | Inativo).
-                        example: 1
-                      created_at:
-                        type: string
-                        description: Data da criação do registro
-                        example: "2021-04-25 18:49:20"
-                      updated_at:
-                        type: string
-                        description: Data da ultima alteração do registro
-                        example: "2021-04-25 18:49:20"
-
-        "500":
-          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+                  id:
+                    type: number
+                    description: identificador unico da categoria.
+                    example: 1
+                  id_category_parent:
+                    type: number
+                    description: Identificador da categoria pai
+                    example: 2
+                  name:
+                    type: string
+                    description: Nome da categoria
+                    example: Casa
+                  is_active:
+                    type: boolean
+                    description: Status da categoria (Ativo | Inativo).
+                    example: 1
+                  created_at:
+                    type: string
+                    description: Data da criação do registro
+                    example: "2021-04-25 18:49:20"
+                  updated_at:
+                    type: string
+                    description: Data da ultima alteração do registro
+                    example: "2021-04-25 18:49:20"
+        "400":
+          description: "Ao tentar alterar uma categoria de outro usuário e erros genéricos"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Erro"
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: Não existe categoria
+                  error:
+                    type: string
+                    example: Não tem permissão para acessar essa categoria
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
 
       description: Detalhando a categoria selecionada.
 
@@ -708,6 +705,300 @@ paths:
   # Regras da Account - Wallet
   # ---------------------------------------------------------------------------------------------------------------
   ##
+  /accounts:
+    get:
+      summary: Listando todas as contas
+      responses:
+        "200":
+          description: Sucesso. A solicitação foi atendida.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      example: "1"
+                    description:
+                      type: string
+                      example: Principal
+                    id_banking:
+                      type: number
+                      example: 18
+                    current_balance:
+                      type: number
+                      example: 250.00
+                    id_user:
+                      type: integer
+                      example: 1
+                    created_at:
+                      type: string
+                      example: "2021-04-26T23:58:32.000000Z"
+                    updated_at:
+                      type: string
+                      example: "2021-04-26T23:58:32.000000Z"
+                    is_active:
+                      type: boolean
+                      example: 0
+        "400":
+          description: "Caso tente listar as contas e ainda não tem nenhum cadastrado"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "Você ainda não tem contas cadastrados."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - accounts
+      parameters: []
+
+    post:
+      summary: Criando uma nova conta
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: Principal
+                id_banking:
+                  type: number
+                  example: 18
+                current_balance:
+                  type: number
+                  example: 250.00
+        required: true
+        description: ""
+      responses:
+        "200":
+          description: CRIADO. A solicitação foi atendida e resultou em um novo recurso sendo criado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: "1"
+                  description:
+                    type: string
+                    example: Principal
+                  id_banking:
+                    type: number
+                    example: 18
+                  current_balance:
+                    type: number
+                    example: 250.00
+                  id_user:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  updated_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  is_active:
+                    type: boolean
+                    example: 0
+        "400":
+          description: "Ao tentar alterar categoria de outro usuário e erros genéricos"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Erro ao salvar conta."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - accounts
+  /accounts/{id}:
+    get:
+      summary: Detalhando a conta
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código da conta
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: SUCESSO. A requisição foi atendida pelo servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: "1"
+                  description:
+                    type: string
+                    example: Principal
+                  id_banking:
+                    type: number
+                    example: 18
+                  current_balance:
+                    type: number
+                    example: 250.00
+                  id_user:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  updated_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  is_active:
+                    type: boolean
+                    example: 0
+        "400":
+          description: SUCESSO. A requisição foi atendida pelo servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: Não existe Conta
+                  error:
+                    type: string
+                    example: Não tem permissão para acessar essa Conta
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      description: Detalhando a categoria selecionada.
+      tags:
+        - accounts
+        
+    put:
+      summary: Alterando dados de uma conta.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código da conta
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: Principal
+                id_banking:
+                  type: number
+                  example: 18
+                current_balance:
+                  type: number
+                  example: 250.00
+        required: true
+        description: ""
+      responses:
+        "200":
+          description: CRIADO. A solicitação foi atendida e resultou em um novo recurso sendo criado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: "1"
+                  description:
+                    type: string
+                    example: Principal
+                  id_banking:
+                    type: number
+                    example: 18
+                  current_balance:
+                    type: number
+                    example: 250.00
+                  id_user:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  updated_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  is_active:
+                    type: boolean
+                    example: 0
+        "400":
+          description: "Ao tentar alterar conta de outro usuário e erros genéricos"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Sem permissão."
+                  response:
+                    type: string
+                    example: "Erro ao alterar conta."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - accounts
+    delete:
+      summary: Inativando conta.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código da conta
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Sucesso. A solicitação foi atendida.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "Conta inativado com sucesso"
+        "400":
+          description: "Erros "
+          content:
+            application/json:
+              schema:
+                properties:
+                  response:
+                    type: string
+                    example: "Erro ao deletar conta"
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - accounts
 
   ##
   # ---------------------------------------------------------------------------------------------------------------
