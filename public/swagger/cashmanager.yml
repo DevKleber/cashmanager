@@ -20,8 +20,12 @@ servers:
 tags:
   - name: auth
     description: Recursos relacionados ao usuário.
+
   - name: categories
     description: Recursos relacionados a categoria.
+
+  - name: credit-card
+    description: Recursos relacionados ao cartão de crédito.
 
 paths:
   ##
@@ -472,6 +476,243 @@ paths:
   # Regras da Credit card
   # ---------------------------------------------------------------------------------------------------------------
   ##
+  /credit-card:
+    get:
+      summary: Listando todos os cartões
+      responses:
+        "200":
+          description: Sucesso. A solicitação foi atendida.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      example: "1"
+                    name:
+                      type: string
+                      example: NuBank
+                    closing_day:
+                      type: string
+                      example: 18
+                    due_day:
+                      type: string
+                      example: 25
+                    id_user:
+                      type: integer
+                      example: 1
+                    created_at:
+                      type: string
+                      example: "2021-04-26T23:58:32.000000Z"
+                    updated_at:
+                      type: string
+                      example: "2021-04-26T23:58:32.000000Z"
+                    is_active:
+                      type: boolean
+                      example: 0
+        "400":
+          description: "Caso tente listar os cartões e ainda não tem nenhum cadastrado"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "Você ainda não tem cartões cadastrados."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - credit-card
+      parameters: []
+
+    post:
+      summary: Criando novo cartão de crédito
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 1
+                name:
+                  type: string
+                  example: NuBank
+                closing_day:
+                  type: string
+                  example: 18
+                due_day:
+                  type: string
+                  example: 25
+        required: true
+        description: ""
+      responses:
+        "200":
+          description: CRIADO. A solicitação foi atendida e resultou em um novo recurso sendo criado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 1
+                  name:
+                    type: string
+                    example: NuBank
+                  closing_day:
+                    type: string
+                    example: 18
+                  due_day:
+                    type: string
+                    example: 25
+                  id_user:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  updated_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  is_active:
+                    type: boolean
+                    example: 0
+        "400":
+          description: "Erro"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Erro ao salvar."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - credit-card
+      parameters: []
+
+  /credit-card/{id}:
+    put:
+      summary: Alterando dados de um cartão de crédito.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código do cartão de crédito
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: NuBank - alterado
+                closing_day:
+                  type: string
+                  example: 18
+                due_day:
+                  type: string
+                  example: 25
+        required: true
+        description: ""
+      responses:
+        "200":
+          description: CRIADO. A solicitação foi atendida e resultou em um novo recurso sendo criado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 1
+                  name:
+                    type: string
+                    example: NuBank - alterado
+                  closing_day:
+                    type: string
+                    example: 18
+                  due_day:
+                    type: string
+                    example: 25
+                  id_user:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  updated_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  is_active:
+                    type: boolean
+                    example: 0
+        "400":
+          description: "Ao tentar alterar cartões de crédito de outro usuário e erros genéricos"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Sem permissão."
+                  response:
+                    type: string
+                    example: "Erro ao alterar cartão de crédito."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - credit-card
+    delete:
+      summary: Inativando cartão de crédito.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código do cartão de crédito
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Sucesso. A solicitação foi atendida.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "Cartão de crédito inativado com sucesso"
+        "400":
+          description: "Erros "
+          content:
+            application/json:
+              schema:
+                properties:
+                  response:
+                    type: string
+                    example: "Erro ao deletar cartão de crédito"
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - credit-card
 
   ##
   # ---------------------------------------------------------------------------------------------------------------
