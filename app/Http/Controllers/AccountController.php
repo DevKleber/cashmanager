@@ -29,12 +29,16 @@ class AccountController extends Controller
             return  response(['message' => 'Erro ao salvar Conta'], 400);
         }
 
-        return response(['message' => 'Salvo com sucesso', 'dados' => $account]);
+        return response($account);
     }
 
     public function show($id)
     {
         $account = \App\Account::find($id);
+
+        if ($account->id_user != auth('api')->user()->id) {
+            return response(['error' => 'Não tem permissão para acessar essa Conta'], 400);
+        }
         
         if (!$account) {
             return response(['response' => 'Não existe Conta'], 400);
@@ -59,7 +63,7 @@ class AccountController extends Controller
                 return response(['response' => 'Conta não foi atualizado'], 400);
             }
 
-            return response(['response' => 'Atualizado com sucesso']);
+            return response($account);
         }
 
         return response(['response' => 'Conta não encontrado']);

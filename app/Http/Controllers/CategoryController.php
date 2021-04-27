@@ -17,7 +17,7 @@ class CategoryController extends Controller
 
         $tree = \App\Category::buildTree($category);
 
-        return response(['dados' => $tree]);
+        return response($tree);
     }
 
     public function store(Request $request)
@@ -31,18 +31,22 @@ class CategoryController extends Controller
             return  response(['message' => 'Erro ao salvar categoria'], 400);
         }
 
-        return response(['message' => 'Salvo com sucesso', 'dados' => $category]);
+        return response($category);
     }
 
     public function show($id)
     {
         $category = \App\Category::find($id);
+
+        if ($category->id_user != auth('api')->user()->id) {
+            return response(['error' => 'Não tem permissão para acessar essa categoria'], 400);
+        }
         
         if (!$category) {
             return response(['response' => 'Não existe categoria'], 400);
         }
 
-        return response(['dados' => $category]);
+        return response($category);
     }
 
     public function update(Request $request, $id)
@@ -65,7 +69,7 @@ class CategoryController extends Controller
                 return response(['response' => 'categoria não foi atualizado'], 400);
             }
 
-            return response(['response' => 'Atualizado com sucesso', 'dados' => $category]);
+            return response($category);
         }
 
         return response(['response' => 'categoria não encontrado']);
