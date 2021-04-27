@@ -13,4 +13,5 @@ Route::group(['middleware' => 'apiJwt'], function () {
     Route::post('auth/validate', 'AuthController@tokenIsValidate');
     Route::put('auth/changePassword', 'AuthController@changePassword');
     Route::resource('categories', 'CategoryController');
+    Route::resource('credit-card', 'CreditCardController');
 });
