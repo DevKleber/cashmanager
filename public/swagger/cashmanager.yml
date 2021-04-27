@@ -410,48 +410,286 @@ paths:
               schema:
                 type: object
                 properties:
+                  id:
+                    type: number
+                    description: identificador unico da categoria.
+                    example: 1
+                  id_category_parent:
+                    type: number
+                    description: Identificador da categoria pai
+                    example: 2
                   name:
                     type: string
-                    description: Nome do usuário.
-                    example: "Gohan"
-                  email:
+                    description: Nome da categoria
+                    example: Casa
+                  is_active:
+                    type: boolean
+                    description: Status da categoria (Ativo | Inativo).
+                    example: 1
+                  created_at:
                     type: string
-                    description: email
-                    example: gohan@gmail.com
-                  email_verified_at:
+                    description: Data da criação do registro
+                    example: "2021-04-25 18:49:20"
+                  updated_at:
                     type: string
-                    description: Data que o usuário validou seu e-mail
-                    example: null
-        "422":
-          description: Representa os campos de erro de resposta do acionamento de um recurso.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  name:
-                    type: array
-                    items:
-                      type: string
-                      example: The name field is required.
-
-                  email:
-                    type: array
-                    items:
-                      type: string
-                      example: The email field is required.
-
-                  password:
-                    type: array
-                    items:
-                      type: string
-                      example: The password field is required.
-
+                    description: Data da ultima alteração do registro
+                    example: "2021-04-25 18:49:20"
         "500":
           description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
       tags:
         - categories
     parameters: []
+    get:
+      summary: Listando categorias
+      description: Listando todas as categorias.
+      responses:
+        "200":
+          description: Busca bem sucedida.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dados:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          description: identificador unico da categoria.
+                          example: 1
+                        id_category_parent:
+                          type: number
+                          description: Identificador da categoria pai
+                          example: 2
+                        name:
+                          type: string
+                          description: Nome da categoria
+                          example: Casa
+                        is_active:
+                          type: boolean
+                          description: Status da categoria (Ativo | Inativo).
+                          example: 1
+                        created_at:
+                          type: string
+                          description: Data da criação do registro
+                          example: "2021-04-25 18:49:20"
+                        updated_at:
+                          type: string
+                          description: Data da ultima alteração do registro
+                          example: "2021-04-25 18:49:20"
+                        children:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: number
+                                description: identificador unico da categoria.
+                                example: 3
+                              id_category_parent:
+                                type: number
+                                description: Identificador da categoria pai
+                                example: 2
+                              name:
+                                type: string
+                                description: Nome da categoria
+                                example: Escola
+                              is_active:
+                                type: boolean
+                                description: Status da categoria (Ativo | Inativo).
+                                example: 1
+                              created_at:
+                                type: string
+                                description: Data da criação do registro
+                                example: "2021-04-25 18:49:20"
+                              updated_at:
+                                type: string
+                                description: Data da ultima alteração do registro
+                                example: "2021-04-25 18:49:20"
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - categories
+        
+  /categories/{id}:
+    get:
+      summary: Detalhando Categoria
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código do cartão de crédito
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: SUCESSO. A requisição foi atendida pelo servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dados:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                        description: identificador unico da categoria.
+                        example: 1
+                      id_category_parent:
+                        type: number
+                        description: Identificador da categoria pai
+                        example: 2
+                      name:
+                        type: string
+                        description: Nome da categoria
+                        example: Casa
+                      is_active:
+                        type: boolean
+                        description: Status da categoria (Ativo | Inativo).
+                        example: 1
+                      created_at:
+                        type: string
+                        description: Data da criação do registro
+                        example: "2021-04-25 18:49:20"
+                      updated_at:
+                        type: string
+                        description: Data da ultima alteração do registro
+                        example: "2021-04-25 18:49:20"
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Erro"
+
+      description: Detalhando a categoria selecionada.
+
+      tags:
+        - categories
+    put:
+      summary: Alterando dados de uma categoria.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código da categoria
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_category_parent:
+                  type: integer
+                  example: 1
+                  description: Categoria pai.
+                name:
+                  type: string
+                  example: Mercado
+                  description: Nome da categoria.
+                icon:
+                  type: string
+                  example: home
+                  description: Nome do icone da categoria.
+                is_income:
+                  type: boolean
+                  example: true
+                  description: Representa se é uma categoria de entrada ou de saida.
+        required: true
+        description: ""
+      responses:
+        "200":
+          description: CRIADO. A solicitação foi atendida e resultou em um novo recurso sendo criado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    description: identificador unico da categoria.
+                    example: 1
+                  id_category_parent:
+                    type: number
+                    description: Identificador da categoria pai
+                    example: 2
+                  name:
+                    type: string
+                    description: Nome da categoria
+                    example: Casa
+                  is_active:
+                    type: boolean
+                    description: Status da categoria (Ativo | Inativo).
+                    example: 1
+                  created_at:
+                    type: string
+                    description: Data da criação do registro
+                    example: "2021-04-25 18:49:20"
+                  updated_at:
+                    type: string
+                    description: Data da ultima alteração do registro
+                    example: "2021-04-25 18:49:20"
+        "400":
+          description: "Ao tentar alterar categoria de outro usuário e erros genéricos"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Sem permissão."
+                  response:
+                    type: string
+                    example: "Erro ao alterar categoria."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - categories
+    delete:
+      summary: Inativando categoria.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código da categoria
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Sucesso. A solicitação foi atendida.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "categoria inativado com sucesso"
+        "400":
+          description: "Erros "
+          content:
+            application/json:
+              schema:
+                properties:
+                  response:
+                    type: string
+                    example: "Erro ao deletar categoria"
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - categories
 
   ##
   # ---------------------------------------------------------------------------------------------------------------

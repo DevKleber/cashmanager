@@ -17,7 +17,7 @@ class CategoryController extends Controller
 
         $tree = \App\Category::buildTree($category);
 
-        return response($tree);
+        return response(['dados' => $tree]);
     }
 
     public function store(Request $request)
@@ -42,16 +42,21 @@ class CategoryController extends Controller
             return response(['response' => 'Não existe categoria'], 400);
         }
 
-        return response($category);
+        return response(['dados' => $category]);
     }
 
     public function update(Request $request, $id)
     {
         $category = \App\Category::find($id);
 
+        
         if ($category) {
             if ($category['id_user'] != auth('api')->user()->id) {
                 return response(['error' => 'Não tem permissão para alterar esse categoria'], 400);
+            }
+
+            if ($category->id == $request->id_category_parent) {
+                return response(['error' => 'Parentesco da categoria é invalido'], 400);
             }
 
             $category = Helpers::processarColunasUpdate($category, $request->all());
