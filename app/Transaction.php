@@ -14,15 +14,24 @@ class Transaction extends Model
     {
         $transaction = self::where('id_user', auth('api')->user()->id)
             ->where('id', $id)
-            ->get();
+            ->first();
 
         if (!$transaction) {
             return false;
         }
         
         $transaction = $transaction->toArray();
-        $transaction['itens'] = \App\TransctionItem::getItensByIdTransaction($id);
+        $transaction['itens'] = \App\TransactionItem::getItensByIdTransaction($id);
 
         return $transaction;
+    }
+
+    public static function getTransactions()
+    {
+        return self::where('transaction.id_user', auth('api')->user()->id)
+            ->join('expense_account', 'expense_account.transaction_id', '=', 'transaction.id')
+            ->join('account', 'account.id', '=', 'expense_account.account_id')
+            ->select('transaction.*', 'account.description as account')
+            ->get();
     }
 }

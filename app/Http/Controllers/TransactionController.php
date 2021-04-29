@@ -9,7 +9,7 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        $transaction = \App\Transaction::where('id_user', auth('api')->user()->id)->get();
+        $transaction = \App\Transaction::getTransactions();
 
         if (!$transaction) {
             return response(['response' => 'Transação não encontrada'], 400);
@@ -28,6 +28,19 @@ class TransactionController extends Controller
 
         if (!$transaction) {
             return  response(['message' => 'Erro ao salvar Transação'], 400);
+        }
+
+        $arExpenseAccount['account_id'] = $ar['account_id'];
+        $arExpenseAccount['transaction_id'] = $transaction->id;
+
+        $expenseAccount = \App\ExpenseAccount::create($arExpenseAccount);
+
+        if (!$expenseAccount) {
+            return  response(['message' => 'Erro ao salvar expense account'], 400);
+        }
+
+        if (!\App\TransactionItem::saveItens($ar, $transaction)) {
+            return  response(['message' => 'Erro ao salvar itens'], 400);
         }
 
         return response($transaction);
