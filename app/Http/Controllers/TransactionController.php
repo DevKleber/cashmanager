@@ -20,13 +20,15 @@ class TransactionController extends Controller
 
     public function store(Request $request)
     {
+        \DB::beginTransaction();
+
         $ar = $request->all();
         $ar['id_user'] = auth('api')->user()->id;
 
         $transaction = \App\Transaction::create($ar);
 
         if (!$transaction) {
-            return  response(['message' => 'Erro ao salvar Transação'], 400);
+            return response(['message' => 'Erro ao salvar Transação'], 400);
         }
 
         $arTransactionAccount['account_id'] = $ar['account_id'];
@@ -35,16 +37,18 @@ class TransactionController extends Controller
         $transactionAccount = \App\TransactionAccount::create($arTransactionAccount);
 
         if (!$transactionAccount) {
-            return  response(['message' => 'Erro ao salvar transaction account'], 400);
+            return response(['message' => 'Erro ao salvar transaction account'], 400);
         }
 
         if (!\App\TransactionItem::saveItens($ar, $transaction)) {
-            return  response(['message' => 'Erro ao salvar itens'], 400);
+            return response(['message' => 'Erro ao salvar itens'], 400);
         }
 
-        if (!\App\Account::alterBalance($ar)) {
-            return  response(['message' => 'Erro ao alterar valor da conta'], 400);
+        if (!\App\Account::updateBalance($ar)) {
+            return response(['message' => 'Erro ao alterar valor da conta'], 400);
         }
+
+        \DB::commit();
 
         return response($transaction);
     }
@@ -96,7 +100,7 @@ class TransactionController extends Controller
             return response(['response' => 'Erro ao deletar Transação'], 400);
         }
 
-        if (!\App\Transaction::returnBalanceByTransaction($id, $transaction)) {
+        if (!\App\Account::getBalanceBackByTransaction($id, $transaction)) {
             return response(['response' => 'Erro ao deletar Transação'], 400);
         }
 

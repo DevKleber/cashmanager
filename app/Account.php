@@ -11,7 +11,7 @@ class Account extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'description', 'id_banking', 'current_balance', 'id_user'];
 
-    public static function alterBalance($request)
+    public static function updateBalance($request)
     {
         if (!isset($request['account_id'])) {
             return true;
@@ -32,7 +32,7 @@ class Account extends Model
         return $account->update($ar);
     }
 
-    public static function returnBalanceByTransaction(int $id, Transaction $transaction)
+    public static function getBalanceBackByTransaction(int $id, Transaction $transaction)
     {
 
         $transactionAccount = \App\TransactionAccount::where('transaction_id', $id)->first();
