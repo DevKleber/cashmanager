@@ -9,7 +9,7 @@ class Category extends Model
 {
     protected $table = 'category';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'id_category_parent', 'name', 'is_active', 'created_at', 'updated_at', 'icon', 'is_income', 'id_user'];
+    protected $fillable = ['id', 'id_category_parent', 'name', 'is_active', 'icon', 'is_income', 'id_user'];
 
     public static function saveCategoryAutomatically($id)
     {
@@ -21,6 +21,7 @@ class Category extends Model
             $request['id_category_parent'] = null;
             $request['id_user'] = $id;
             $request['icon'] = $value['icon'];
+            $request['is_income'] = false;
             $categories = self::create($request);
             if (!$categories) {
                 return false;
@@ -28,9 +29,10 @@ class Category extends Model
 
             foreach ($value['filhas'] as $key => $filhas) {
                 $request['name'] = $filhas['no_categoria'];
-                $request['id_category_parent'] = $categories->id_category_parent;
+                $request['id_category_parent'] = $categories->id;
                 $request['id_user'] = $id;
                 $request['icon'] = $filhas['icon'];
+                $request['is_income'] = false;
                 $subCategories = self::create($request);
                 if (!$subCategories) {
                     return false;

@@ -26,9 +26,12 @@ tags:
 
   - name: credit-card
     description: Recursos relacionados ao cartão de crédito.
-    
+
   - name: accounts
     description: Recursos relacionados as contas do usuário.
+
+  - name: planned-expenses
+    description: Recursos relacionados ao valor a gastar por categoria.
 
 paths:
   ##
@@ -503,7 +506,7 @@ paths:
           description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
       tags:
         - categories
-        
+
   /categories/{id}:
     get:
       summary: Detalhando Categoria
@@ -886,7 +889,7 @@ paths:
       description: Detalhando a categoria selecionada.
       tags:
         - accounts
-        
+
     put:
       summary: Alterando dados de uma conta.
       parameters:
@@ -1242,6 +1245,100 @@ paths:
           description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
       tags:
         - credit-card
+
+  /planned-expenses:
+    get:
+      summary: Listando planejamentos
+      responses:
+        "200":
+          description: Sucesso. A solicitação foi atendida.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      example: 124
+                    id_category_parent:
+                      example: null
+                    name:
+                      example: 'Alimentação'
+                    icon:
+                      example: 'fa fa-utensils'
+                    value_percent:
+                      example: 10
+                    children:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            example: 125
+                          id_category_parent:
+                            example: 124
+                          name:
+                            example: Lanches
+                          icon:
+                            example: 'fa fa-store'
+                          value_percent:
+                            example: null
+        "400":
+          description: "Erro ao obter os planejamentos"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "Erro ao obter os planejamentos."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - planned-expenses
+    post:
+      summary: Salvando planejamentos.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_category:
+                  type: string
+                  example: 116
+                value_percent:
+                  type: string
+                  example: 4
+      responses:
+        "200":
+          description: Sucesso. A solicitação foi atendida.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "Salvo com sucesso!"
+        "400":
+          description: "Erros "
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "Sem permissão | Erro ao salvar planejamento"
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - planned-expenses
 
   ##
   # ---------------------------------------------------------------------------------------------------------------
