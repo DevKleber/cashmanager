@@ -49,10 +49,6 @@
         cd cashmanager && composer install
 
 
-<br />
-
-### Installation
-    npm install
 
 <br />
 
