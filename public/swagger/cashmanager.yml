@@ -32,6 +32,9 @@ tags:
 
   - name: planned-expenses
     description: Recursos relacionados ao valor a gastar por categoria.
+    
+  - name: transactions
+    description: Recursos relacionados as transações.
 
 paths:
   ##
@@ -1342,9 +1345,379 @@ paths:
 
   ##
   # ---------------------------------------------------------------------------------------------------------------
-  # Regras da Transaction Expense
+  # Regras da Transaction
   # ---------------------------------------------------------------------------------------------------------------
   ##
+  
+  /transactions:
+    get:
+      summary: Listando todas as transações
+      responses:
+        "200":
+          description: Sucesso. A solicitação foi atendida.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      example: "1"
+                    value:
+                      type: number
+                      example: 200
+                    description:
+                      type: string
+                      example: casa
+                    name:
+                      type: string
+                      example: casa
+                    is_income:
+                      type: boolean
+                      example: true
+                    created_at:
+                      type: string
+                      example: "2021-04-26T23:58:32.000000Z"
+                    updated_at:
+                      type: string
+                      example: "2021-04-26T23:58:32.000000Z"
+                    id_user:
+                      type: number
+                      example: 1
+                    account:
+                      type: number
+                      example: 1
+        "400":
+          description: "Caso tente listar as transações e ainda não tem nenhum cadastrado"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "Você ainda não tem transações cadastrados."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - transactions
+      parameters: []
+
+    post:
+      summary: Criando uma nova transação
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: number
+                  example: 200
+                description:
+                  type: string
+                  example: Caco cola
+                is_income:
+                  type: boolean
+                  example: true
+                name:
+                  type: string
+                  example: coca cola
+                account_id:
+                  type: number
+                  example: 18
+                instalment:
+                  type: number
+                  example: 2
+                is_paid:
+                  type: boolean
+                  example: true
+                due_date:
+                  type: string
+                  example: '2021-04-28'
+        required: true
+        description: ""
+      responses:
+        "200":
+          description: CRIADO. A solicitação foi atendida e resultou em um novo recurso sendo criado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: "1"
+                  value:
+                    type: number
+                    example: 200
+                  description:
+                    type: string
+                    example: casa
+                  name:
+                    type: string
+                    example: casa
+                  is_income:
+                    type: boolean
+                    example: true
+                  created_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  updated_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  id_user:
+                    type: number
+                    example: 1
+                  account:
+                    type: number
+                    example: 1
+        "400":
+          description: "Ao tentar alterar uma transação de outro usuário e erros genéricos"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Erro ao salvar transação."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - transactions
+  /transactions/{id}:
+    get:
+      summary: Detalhando a transações
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código da transação
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: SUCESSO. A requisição foi atendida pelo servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: "1"
+                  value:
+                    type: number
+                    example: 200
+                  description:
+                    type: string
+                    example: casa
+                  name:
+                    type: string
+                    example: casa
+                  is_income:
+                    type: boolean
+                    example: true
+                  created_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  updated_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  id_user:
+                    type: number
+                    example: 1
+                  account:
+                    type: number
+                    example: 1
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: "1"
+                        is_paid:
+                          type: number
+                          example: 1
+                        due_date:
+                          type: string
+                          example: "2021-04-28"
+                        value:
+                          type: number
+                          example: 150
+                        currenct_installment:
+                          type: number
+                          example: 1
+                        created_at:
+                          type: string
+                          example: "2021-04-26T23:58:32.000000Z"
+                        updated_at:
+                          type: string
+                          example: "2021-04-26T23:58:32.000000Z"
+                        installment:
+                          type: number
+                          example: 1
+                        id_transaction:
+                          type: number
+                          example: 1
+                      
+        "400":
+          description: SUCESSO. A requisição foi atendida pelo servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: Não existe transações
+                  error:
+                    type: string
+                    example: Não tem permissão para acessar essa transações
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      description: Detalhando a categoria selecionada.
+      tags:
+        - transactions
+
+    put:
+      summary: Alterando dados de uma transações.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código da transações
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: number
+                  example: 200
+                description:
+                  type: string
+                  example: Caco cola
+                is_income:
+                  type: boolean
+                  example: true
+                name:
+                  type: string
+                  example: coca cola
+                account_id:
+                  type: number
+                  example: 18
+                instalment:
+                  type: number
+                  example: 2
+                is_paid:
+                  type: boolean
+                  example: true
+                due_date:
+                  type: string
+                  example: '2021-04-28'
+        required: true
+        description: ""
+      responses:
+        "200":
+          description: CRIADO. A solicitação foi atendida e resultou em um novo recurso sendo criado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: "1"
+                  value:
+                    type: number
+                    example: 200
+                  description:
+                    type: string
+                    example: casa
+                  name:
+                    type: string
+                    example: casa
+                  is_income:
+                    type: boolean
+                    example: true
+                  created_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  updated_at:
+                    type: string
+                    example: "2021-04-26T23:58:32.000000Z"
+                  id_user:
+                    type: number
+                    example: 1
+                  account:
+                    type: number
+                    example: 1
+        "400":
+          description: "Ao tentar alterar transações de outro usuário e erros genéricos"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Sem permissão."
+                  response:
+                    type: string
+                    example: "Erro ao alterar transações."
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - transactions
+    delete:
+      summary: Inativando transações.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: código da transação
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Sucesso. A solicitação foi atendida.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: "transação inativada com sucesso"
+        "400":
+          description: "Erros "
+          content:
+            application/json:
+              schema:
+                properties:
+                  response:
+                    type: string
+                    example: "Erro ao deletar transação"
+
+        "500":
+          description: ERRO INTERNO. O servidor encontrou uma condição inesperada que o impediu de atender a requisição.
+      tags:
+        - transactions
 
   ##
   # ---------------------------------------------------------------------------------------------------------------
