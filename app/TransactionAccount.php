@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ExpenseAccount extends Model
+class TransactionAccount extends Model
 {
-    protected $table = 'expense_account';
+    protected $table = 'transaction_account';
     protected $primaryKey = 'transaction_id';
     protected $fillable = ['account_id', 'transaction_id'];
 }

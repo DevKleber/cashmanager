@@ -22,7 +22,6 @@ class TransactionController extends Controller
     {
         $ar = $request->all();
         $ar['id_user'] = auth('api')->user()->id;
-        $ar['date'] = date('Y-m-d H:i');
 
         $transaction = \App\Transaction::create($ar);
 
@@ -30,17 +29,21 @@ class TransactionController extends Controller
             return  response(['message' => 'Erro ao salvar Transação'], 400);
         }
 
-        $arExpenseAccount['account_id'] = $ar['account_id'];
-        $arExpenseAccount['transaction_id'] = $transaction->id;
+        $arTransactionAccount['account_id'] = $ar['account_id'];
+        $arTransactionAccount['transaction_id'] = $transaction->id;
 
-        $expenseAccount = \App\ExpenseAccount::create($arExpenseAccount);
+        $transactionAccount = \App\TransactionAccount::create($arTransactionAccount);
 
-        if (!$expenseAccount) {
-            return  response(['message' => 'Erro ao salvar expense account'], 400);
+        if (!$transactionAccount) {
+            return  response(['message' => 'Erro ao salvar transaction account'], 400);
         }
 
         if (!\App\TransactionItem::saveItens($ar, $transaction)) {
             return  response(['message' => 'Erro ao salvar itens'], 400);
+        }
+
+        if (!\App\Account::alterBalance($ar)) {
+            return  response(['message' => 'Erro ao alterar valor da conta'], 400);
         }
 
         return response($transaction);
@@ -90,6 +93,10 @@ class TransactionController extends Controller
         $transaction->is_active = false;
 
         if (!$transaction->save()) {
+            return response(['response' => 'Erro ao deletar Transação'], 400);
+        }
+
+        if (!\App\Transaction::returnBalanceByTransaction($id, $transaction)) {
             return response(['response' => 'Erro ao deletar Transação'], 400);
         }
 

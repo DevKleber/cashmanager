@@ -8,7 +8,7 @@ class Transaction extends Model
 {
     protected $table = 'transaction';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'value', 'date', 'description', 'id_user', 'is_income', 'name'];
+    protected $fillable = ['id', 'value', 'description', 'id_user', 'is_income', 'name'];
 
     public static function getTransactionById(int $id)
     {
@@ -29,8 +29,8 @@ class Transaction extends Model
     public static function getTransactions()
     {
         return self::where('transaction.id_user', auth('api')->user()->id)
-            ->join('expense_account', 'expense_account.transaction_id', '=', 'transaction.id')
-            ->join('account', 'account.id', '=', 'expense_account.account_id')
+            ->join('transaction_account', 'transaction_account.transaction_id', '=', 'transaction.id')
+            ->join('account', 'account.id', '=', 'transaction_account.account_id')
             ->select('transaction.*', 'account.description as account')
             ->get();
     }
