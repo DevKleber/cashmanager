@@ -17,7 +17,6 @@ class CreditCard extends Model
         if (!$creditCard) {
             return false;
         }
-        $asd = auth('api')->user()->id;
 
         $expenseCreditCard = self::join('expense_credit_card', 'credit_card.id', '=', 'expense_credit_card.id_credit_card')
             ->join('transaction', 'transaction.id', '=', 'expense_credit_card.id_transaction')
