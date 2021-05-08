@@ -64,7 +64,7 @@ class AuthController extends Controller
         if (\App\User::passwordIsWeak($request['password'])) {
             return response(['response' => 'Senha informada é muito fraca'], 400);
         }
-
+        $currentPassword = $request['password'];
         $request['password'] = bcrypt($request['password']);
         $user = \App\User::create($request->all());
 
@@ -75,8 +75,8 @@ class AuthController extends Controller
             return response(['response' => 'Erro ao criar categorias. Entre em contato'], 400);
         }
         \DB::commit();
-
-        return $user;
+        $request['password'] = $currentPassword;
+        return $this->login($request);
     }
 
     public function me()

@@ -33,7 +33,7 @@ class CreditCardController extends Controller
 
     public function show($id)
     {
-        $creditCard = \App\CreditCard::find($id);
+        $creditCard = \App\CreditCard::getCreditCardById($id);
 
         if (!$creditCard) {
             return response(['response' => 'Erro!'], 400);
