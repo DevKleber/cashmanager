@@ -15,9 +15,7 @@ class CategoryController extends Controller
             return response(['response' => 'Categoria não encontrada'], 400);
         }
 
-        $tree = \App\Category::buildTree($category);
-
-        return response($tree);
+        return response($category);
     }
 
     public function store(Request $request)

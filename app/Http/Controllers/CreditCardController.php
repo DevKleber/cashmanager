@@ -9,7 +9,7 @@ class CreditCardController extends Controller
 {
     public function index()
     {
-        $creditCard = \App\CreditCard::where('id_user', auth('api')->user()->id)->get();
+        $creditCard = \App\CreditCard::getCreditCards();
 
         if (!$creditCard) {
             return response(['response' => 'Você ainda não tem cartões cadastrados.'], 400);
