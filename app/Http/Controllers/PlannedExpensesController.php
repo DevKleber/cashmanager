@@ -20,7 +20,7 @@ class PlannedExpensesController extends Controller
             return response(['response' => 'Erro ao obter os planejamentos!'], 400);
         }
 
-        return response(\App\Category::buildTree($plannedExpenses));
+        return response($plannedExpenses);
     }
 
     public function store(Request $request)
@@ -45,6 +45,40 @@ class PlannedExpensesController extends Controller
 
                 return response(['response' => 'Erro ao salvar planejamento!'], 400);
             }
+        }
+
+        \DB::commit();
+
+        return response(['response' => 'Salvo com sucesso!']);
+    }
+
+    public function update(Request $request, $id)
+    {
+        \DB::beginTransaction();
+
+        $plannedExpenses = \App\PlannedExpenses::join('category as c', 'planned_expenses.id_category', '=', 'c.id')
+        ->where('c.id', $id)
+        ->where('id_user', auth('api')->user()->id)->first();
+
+        $ar = [];
+
+        $ar['id_category'] = $request['id'];
+        $ar['value_percent'] = $request['value_percent'];
+
+        if (!$plannedExpenses) {
+            $plannedExpenses = \App\PlannedExpenses::create($ar);
+
+            if (!$plannedExpenses) {
+                return response(['response' => 'Erro ao salvar planejamento!'], 400);
+            }
+
+            \DB::commit();
+            
+            return response(['response' => 'Salvo com sucesso!']);
+        }
+
+        if (!$plannedExpenses->update($ar)) {
+            return response(['response' => 'Erro ao salvar planejamento!'], 400);
         }
 
         \DB::commit();
