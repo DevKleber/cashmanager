@@ -10,7 +10,7 @@ class CreditCardController extends Controller
     public function index()
     {
         $creditCard = \App\CreditCard::getCreditCards();
-
+        
         if (!$creditCard) {
             return response(['response' => 'Você ainda não tem cartões cadastrados.'], 400);
         }
@@ -34,7 +34,6 @@ class CreditCardController extends Controller
     public function show($id)
     {
         $creditCard = \App\CreditCard::getCreditCardById($id);
-
         if (!$creditCard) {
             return response(['response' => 'Erro!'], 400);
         }

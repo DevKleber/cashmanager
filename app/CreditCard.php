@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Request;
 class CreditCard extends Model
 {
     protected $table = 'credit_card';
@@ -12,6 +12,8 @@ class CreditCard extends Model
 
     public static function getCreditCardById($id) 
     {
+        $month = Request::get('month');
+
         $creditCard = self::where('id_user',  auth('api')->user()->id)
         ->where('id',  $id)
         ->first();
@@ -23,8 +25,9 @@ class CreditCard extends Model
         $expenseCreditCard = self::join('expense_credit_card', 'credit_card.id', '=', 'expense_credit_card.id_credit_card')
             ->join('transaction', 'transaction.id', '=', 'expense_credit_card.id_transaction')
             ->join('category', 'category.id', '=', 'transaction.id_category')
-            ->select('transaction.*', 'category.icon')
+            ->select('transaction.*', 'expense_credit_card.id_transaction', 'category.icon')
             ->where('credit_card.id_user', auth('api')->user()->id)
+            ->whereRaw("MONTH(transaction.created_at) = {$month}")
             ->where('credit_card.id', $creditCard->id)->get();
         
         $total = 0;
