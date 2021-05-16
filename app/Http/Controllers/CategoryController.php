@@ -7,18 +7,6 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function test()
-    {
-        $category = \App\Category::get();
-
-        if (!$category) {
-            return response(['response' => 'Categoria não encontrada'], 400);
-        }
-
-        $tree = \App\Category::buildTree($category);
-
-        return response($tree);
-    }
     public function index()
     {
         $category = \App\Category::where('id_user', auth('api')->user()->id)->get();
@@ -38,7 +26,7 @@ class CategoryController extends Controller
         $category = \App\Category::create($ar);
 
         if (!$category) {
-            return  response(['message' => 'Erro ao salvar categoria'], 400);
+            return response(['message' => 'Erro ao salvar categoria'], 400);
         }
 
         return response($category);
@@ -62,7 +50,6 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = \App\Category::find($id);
-
 
         if ($category) {
             if ($category['id_user'] != auth('api')->user()->id) {
