@@ -18,4 +18,5 @@ Route::group(['middleware' => 'apiJwt'], function () {
     Route::resource('transactions', 'TransactionController');
     Route::get('planned-expenses', 'PlannedExpensesController@index');
     Route::post('planned-expenses', 'PlannedExpensesController@store');
+
 });
