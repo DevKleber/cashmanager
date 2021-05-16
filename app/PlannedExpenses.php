@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PlannedExpenses extends Model
 {
     protected $table = 'planned_expenses';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_category';
 
     protected $fillable = ['id_category', 'value_percent'];
 
