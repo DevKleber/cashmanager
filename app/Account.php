@@ -4,12 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use \App\Transaction;
+use Illuminate\Support\Facades\Request;
 
 class Account extends Model
 {
     protected $table = 'account';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'description', 'id_banking', 'current_balance', 'id_user'];
+    protected $fillable = ['id', 'description', 'banking', 'current_balance', 'id_user'];
 
     public static function updateBalance($request)
     {
@@ -31,6 +32,18 @@ class Account extends Model
 
         return $account->update($ar);
     }
+
+    public static function getTrasactionsByIdAccount($id)
+    {
+        $month = Request::get('month');
+
+        return self::join('transaction_account', 'transaction_account.account_id', '=', 'account.id')
+        ->join('transaction', 'transaction.id', '=', 'transaction_account.transaction_id')
+        ->where('account.id', $id)
+        ->whereRaw("MONTH(transaction.created_at) = {$month}")
+        ->get();
+    }
+
 
     public static function getBalanceBackByTransaction(int $id, Transaction $transaction)
     {

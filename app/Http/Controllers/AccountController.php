@@ -9,7 +9,9 @@ class AccountController extends Controller
 {
     public function index()
     {
-        $accounts = \App\Account::where('id_user', auth('api')->user()->id)->get();
+        $accounts = \App\Account::where('id_user', auth('api')->user()->id)
+        ->where('is_active', true)
+        ->get();
 
         if (!$accounts) {
             return response(['response' => 'Conta não encontrada'], 400);
@@ -39,10 +41,11 @@ class AccountController extends Controller
         if ($account->id_user != auth('api')->user()->id) {
             return response(['error' => 'Não tem permissão para acessar essa Conta'], 400);
         }
-        
         if (!$account) {
             return response(['response' => 'Não existe Conta'], 400);
         }
+
+        $account->items = \App\Account::getTrasactionsByIdAccount($id);
 
         return response($account);
     }
