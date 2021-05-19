@@ -27,7 +27,7 @@ class CategoryController extends Controller
         $category = \App\Category::create($ar);
 
         if (!$category) {
-            return  response(['message' => 'Erro ao salvar categoria'], 400);
+            return response(['message' => 'Erro ao salvar categoria'], 400);
         }
 
         return response($category);
@@ -40,7 +40,7 @@ class CategoryController extends Controller
         if ($category->id_user != auth('api')->user()->id) {
             return response(['error' => 'Não tem permissão para acessar essa categoria'], 400);
         }
-        
+
         if (!$category) {
             return response(['response' => 'Não existe categoria'], 400);
         }
@@ -52,7 +52,6 @@ class CategoryController extends Controller
     {
         $category = \App\Category::find($id);
 
-        
         if ($category) {
             if ($category['id_user'] != auth('api')->user()->id) {
                 return response(['error' => 'Não tem permissão para alterar esse categoria'], 400);
@@ -81,7 +80,7 @@ class CategoryController extends Controller
         if (!$category) {
             return response(['response' => 'categoria Não encontrado'], 400);
         }
-        
+
         $category->is_active = false;
 
         if (!$category->save()) {
