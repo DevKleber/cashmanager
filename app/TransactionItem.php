@@ -18,14 +18,18 @@ class TransactionItem extends Model
 
     public static function saveItens(array $ar, Transaction $transaction)
     {
-        $parceledValue = $transaction->value / $ar['instalment'];
+        $parceledValue = $transaction->value;
         
-        for ($i=0; $i < $ar['instalment']; $i++) {
+        if ($ar['id_creditcard']) {
+            $parceledValue = $transaction->value / $ar['installment'];
+        }
+        
+        for ($i=0; $i < $ar['installment']; $i++) {
             $item = [];
             $item['id_transaction'] = $transaction->id;
             $item['value'] = $parceledValue;
             $item['currenct_installment'] = ($i + 1);
-            $item['installment'] = $ar['instalment'];
+            $item['installment'] = $ar['installment'];
             $item['is_paid'] = $ar['is_paid'];
             $item['due_date'] = self::formatDueDate($ar, ($i + 1));
 

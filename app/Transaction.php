@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Request;
 
 class Transaction extends Model
 {
@@ -28,10 +29,19 @@ class Transaction extends Model
 
     public static function getTransactions()
     {
-        return self::where('transaction.id_user', auth('api')->user()->id)
+
+        $month = Request::get('month');
+
+        $query = self::where('transaction.id_user', auth('api')->user()->id)
             ->join('transaction_account', 'transaction_account.transaction_id', '=', 'transaction.id')
+            ->join('category', 'transaction.id_category', '=', 'category.id')
             ->join('account', 'account.id', '=', 'transaction_account.account_id')
-            ->select('transaction.*', 'account.description as account')
-            ->get();
+            ->select('transaction.*','category.icon', 'account.description as account');
+            
+        if ($month != 0) {
+            $query->whereRaw("MONTH(transaction.created_at) = {$month}");
+        }
+
+        return $query->get();
     }
 }
