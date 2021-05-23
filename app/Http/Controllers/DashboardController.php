@@ -57,7 +57,7 @@ class DashboardController extends Controller
             ->join('category as c', 'c.id', '=', 't.id_category')
             ->whereRaw("YEAR(due_date) = {$ano} and t.is_income = false")
             ->where('t.id_user', auth('api')->user()->id)
-            ->selectRaw('c.name, COALESCE(sum(transaction_item.value),0) as total, "asdf" as color,"#7F7F7F" as legendFontColor')
+            ->selectRaw('c.name, COALESCE(sum(transaction_item.value),0) as total,"#7F7F7F" as legendFontColor, "#rgba(1, 1, 1, 1)" as color')
             ->groupByRaw('t.id_category, c.name ')
             ->get()
         ;
