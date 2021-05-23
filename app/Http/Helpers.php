@@ -2,6 +2,18 @@
 
 class Helpers
 {
+    public static function getColor()
+    {
+        $rgbColor = [];
+        //Create a loop.
+        foreach (['r', 'g', 'b'] as $color) {
+            //Generate a random number between 0 and 255.
+            $rgbColor[$color] = mt_rand(0, 255);
+        }
+		$rgb = $rgbColor['r'].','.$rgbColor['g'].','.$rgbColor['b'];
+		return $rgb;
+    }
+
     public static function getDataNascimentoByMeses($meses)
     {
         return date('Y-m-d', strtotime("-{$meses} months"));

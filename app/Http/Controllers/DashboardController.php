@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Helpers;
+
 class DashboardController extends Controller
 {
     public function index()
@@ -52,12 +54,14 @@ class DashboardController extends Controller
     private function categoriasDoAno()
     {
         $ano = date('Y');
+        $rgbRandom = Helpers::getColor();
+        $rgb = "rgba({$rgbRandom},1)";
 
         return \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
             ->join('category as c', 'c.id', '=', 't.id_category')
             ->whereRaw("YEAR(due_date) = {$ano} and t.is_income = false")
             ->where('t.id_user', auth('api')->user()->id)
-            ->selectRaw('c.name, COALESCE(sum(transaction_item.value),0) as total,"#7F7F7F" as legendFontColor, "#rgba(1, 1, 1, 1)" as color')
+            ->selectRaw('c.name, COALESCE(sum(transaction_item.value),0) as total,"#7F7F7F" as legendFontColor, "'.$rgb.'" as color')
             ->groupByRaw('t.id_category, c.name ')
             ->get()
         ;
