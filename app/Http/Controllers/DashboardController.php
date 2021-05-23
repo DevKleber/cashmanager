@@ -12,6 +12,7 @@ class DashboardController extends Controller
         $totalPlanejamento = ['total' => 89];
         $entradasDoAno = $this->graficoEntradasDoAno();
         $saidasDoAno = $this->graficoSaidasDoAno();
+        $categoriasDoAno = $this->categoriasDoAno();
 
         return [
             'totalEntradas' => $totalEntradas,
@@ -20,6 +21,7 @@ class DashboardController extends Controller
             'totalPlanejamento' => $totalPlanejamento,
             'entradasDoAno' => $entradasDoAno,
             'saidasDoAno' => $saidasDoAno,
+            'categoriasDoAno' => $categoriasDoAno,
         ];
     }
 
@@ -44,6 +46,20 @@ class DashboardController extends Controller
             ->where('id_user', auth('api')->user()->id)
             ->selectRaw('sum(transaction_item.value) as total')
             ->first()
+        ;
+    }
+
+    private function categoriasDoAno()
+    {
+        $ano = date('Y');
+
+        return \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
+            ->join('category as c', 'c.id', '=', 't.id_category')
+            ->whereRaw("YEAR(due_date) = {$ano} and t.is_income = false")
+            ->where('t.id_user', auth('api')->user()->id)
+            ->selectRaw('c.name, sum(transaction_item.value) as total, "asdf" as color,"#7F7F7F" as legendFontColor')
+            ->groupByRaw('t.id_category, c.name ')
+            ->get()
         ;
     }
 
