@@ -19,4 +19,5 @@ Route::group(['middleware' => 'apiJwt'], function () {
     Route::get('planned-expenses', 'PlannedExpensesController@index');
     Route::put('planned-expenses/{id}', 'PlannedExpensesController@update');
     Route::post('planned-expenses', 'PlannedExpensesController@store');
+    Route::get('dashboard', 'DashboardController@index');
 });
