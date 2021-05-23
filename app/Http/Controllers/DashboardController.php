@@ -11,7 +11,8 @@ class DashboardController extends Controller
         $currentMonth = date('m');
         $totalEntradas = $this->totalEntradas($currentMonth);
         $totalSaida = $this->totalSaida($currentMonth);
-        $totalPlanejamento = ['total' => 89];
+        $totalPlanejamento = ['total'=>89];
+        $planejamento = $this->planejamentoSummary($currentMonth);
         $entradasDoAno = $this->graficoEntradasDoAno();
         $saidasDoAno = $this->graficoSaidasDoAno();
         $categoriasDoAno = $this->categoriasDoAno();
@@ -20,12 +21,40 @@ class DashboardController extends Controller
             'totalEntradas' => $totalEntradas,
             'totalSaida' => $totalSaida,
             'totalPlanejamento' => $totalPlanejamento,
-            'totalPlanejamento' => $totalPlanejamento,
+            'planejamento' => $planejamento,
             'entradasDoAno' => $entradasDoAno,
             'saidasDoAno' => $saidasDoAno,
             'categoriasDoAno' => $categoriasDoAno,
         ];
     }
+
+	private function planejamentoSummary($mes, $ano = null){
+		$ano = null === $ano ? date('Y') : $ano;
+
+		return \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
+			->join('category as c', 'c.id', '=', 't.id_category')
+			->join('category as cp', 'cp.id', '=', 'c.id_category_parent')
+			->leftJoin('planned_expenses as pe', 'pe.id_category', '=', 'cp.id')
+			->whereRaw("MONTH(due_date) = {$mes} AND YEAR(due_date) = {$ano} and t.is_income = false")
+			->where('t.id_user', auth('api')->user()->id)
+			->groupByRaw('t.id_category, cp.name, pe.value_percent')
+			->selectRaw('
+				t.id_category,
+				cp.name,
+				sum(transaction_item.value) as total,
+				pe.value_percent,
+				cp.icon,
+				(SELECT sum(ti.value)
+					FROM transaction_item ti
+					JOIN `transaction` t ON t.id = ti.id_transaction
+					WHERE t.is_income = TRUE
+					AND YEAR(due_date) = '.$ano.'
+					AND MONTH(due_date) = '.$mes.'
+				) AS income
+			')
+			->get()
+		;
+	}
 
     private function totalEntradas($mes, $ano = null)
     {

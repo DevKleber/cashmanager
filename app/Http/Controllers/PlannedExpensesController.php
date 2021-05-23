@@ -9,9 +9,10 @@ class PlannedExpensesController extends Controller
     public function index()
     {
         $plannedExpenses = \App\Category::leftJoin('planned_expenses as pe', 'pe.id_category', '=', 'category.id')
-            ->where('id_user', auth('api')->user()->id)
-            ->where('is_active', true)
-            ->where('is_income', false)
+			->where('id_user', auth('api')->user()->id)
+			->where('is_active', true)
+			->where('is_income', false)
+			->whereNull('id_category_parent')
             ->select('category.id', 'category.id_category_parent', 'category.name', 'category.icon', 'pe.value_percent')
             ->get()
         ;
@@ -73,7 +74,7 @@ class PlannedExpensesController extends Controller
             }
 
             \DB::commit();
-            
+
             return response(['response' => 'Salvo com sucesso!']);
         }
 
