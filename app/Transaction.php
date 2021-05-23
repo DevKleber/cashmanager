@@ -9,7 +9,7 @@ class Transaction extends Model
 {
     protected $table = 'transaction';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'value', 'description', 'id_user', 'is_income', 'name'];
+    protected $fillable = ['id', 'value', 'description', 'id_user', 'is_income', 'name', 'id_category'];
 
     public static function getTransactionById(int $id)
     {
