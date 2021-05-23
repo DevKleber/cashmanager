@@ -81,15 +81,15 @@ class DashboardController extends Controller
         $entradas = $this->queryEntradasSaidasDoAno(1);
         $grafico = [
             'labels' => ['Jan', 'Fev', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            'datasets' => [
+            'datasets' => [[
                 'data' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 'color' => ['rgba(42, 0, 79, 1)`'],
                 'strokeWidth' => 2,
-            ],
+            ]],
             'legend' => ['Entradas do ano'],
         ];
         foreach ($entradas as $value) {
-            $grafico['datasets']['data'][$value->mes - 1] = (float) $value->total;
+            $grafico['datasets'][0]['data'][$value->mes - 1] = (float) $value->total;
         }
 
         return $grafico;
@@ -100,15 +100,15 @@ class DashboardController extends Controller
         $saidas = $this->queryEntradasSaidasDoAno(0);
         $grafico = [
             'labels' => ['Jan', 'Fev', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            'datasets' => [
+            'datasets' => [[
                 'data' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 'color' => ['rgba(42, 0, 79, 1)`'],
                 'strokeWidth' => 2,
-            ],
+            ]],
             'legend' => ['Saidas do ano'],
         ];
         foreach ($saidas as $value) {
-            $grafico['datasets']['data'][$value->mes - 1] = (float) $value->total;
+            $grafico['datasets'][0]['data'][$value->mes - 1] = (float) $value->total;
         }
 
         return $grafico;
