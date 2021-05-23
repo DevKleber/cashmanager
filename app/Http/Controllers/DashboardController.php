@@ -11,8 +11,8 @@ class DashboardController extends Controller
         $currentMonth = date('m');
         $totalEntradas = $this->totalEntradas($currentMonth);
         $totalSaida = $this->totalSaida($currentMonth);
-        $totalPlanejamento = ['total'=>89];
         $planejamento = $this->planejamentoSummary($currentMonth);
+        $totalPlanejamento = $this->calculoPlanejamento($planejamento);
         $entradasDoAno = $this->graficoEntradasDoAno();
         $saidasDoAno = $this->graficoSaidasDoAno();
         $categoriasDoAno = $this->categoriasDoAno();
@@ -28,17 +28,18 @@ class DashboardController extends Controller
         ];
     }
 
-	private function planejamentoSummary($mes, $ano = null){
-		$ano = null === $ano ? date('Y') : $ano;
+    private function planejamentoSummary($mes, $ano = null)
+    {
+        $ano = null === $ano ? date('Y') : $ano;
 
-		return \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
-			->join('category as c', 'c.id', '=', 't.id_category')
-			->join('category as cp', 'cp.id', '=', 'c.id_category_parent')
-			->leftJoin('planned_expenses as pe', 'pe.id_category', '=', 'cp.id')
-			->whereRaw("MONTH(due_date) = {$mes} AND YEAR(due_date) = {$ano} and t.is_income = false")
-			->where('t.id_user', auth('api')->user()->id)
-			->groupByRaw('t.id_category, cp.name, pe.value_percent')
-			->selectRaw('
+        return \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
+            ->join('category as c', 'c.id', '=', 't.id_category')
+            ->join('category as cp', 'cp.id', '=', 'c.id_category_parent')
+            ->leftJoin('planned_expenses as pe', 'pe.id_category', '=', 'cp.id')
+            ->whereRaw("MONTH(due_date) = {$mes} AND YEAR(due_date) = {$ano} and t.is_income = false")
+            ->where('t.id_user', auth('api')->user()->id)
+            ->groupByRaw('t.id_category, cp.name, pe.value_percent')
+            ->selectRaw('
 				t.id_category,
 				cp.name,
 				sum(transaction_item.value) as total,
@@ -52,9 +53,27 @@ class DashboardController extends Controller
 					AND MONTH(due_date) = '.$mes.'
 				) AS income
 			')
-			->get()
-		;
-	}
+            ->get()
+        ;
+    }
+
+    private function calculoPlanejamento($planejamento)
+    {
+        $totalPlanejado = \App\PlannedExpenses::join('category as c', 'c.id', '=', 'planned_expenses.id_category')
+            ->where('id_user', auth('api')->user()->id)
+            ->selectRaw('sum(value_percent) as planejado')->first();
+
+        $sumTotalGasto = 0;
+        $income = (float) $planejamento[0]->income;
+
+        foreach ($planejamento as $value) {
+            $sumTotalGasto += $value->total;
+        }
+		$total = $sumTotalGasto * 100 / $income;
+
+
+        return ['totalPlanejado' => (float) $totalPlanejado->planejado, 'total'=>$total];
+    }
 
     private function totalEntradas($mes, $ano = null)
     {
