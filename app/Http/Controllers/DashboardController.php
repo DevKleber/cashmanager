@@ -6,11 +6,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalEntradas = $this->totalEntradas(4);
-        $totalSaida = $this->totalSaida(4);
+        $currentMonth = date('m');
+        $totalEntradas = $this->totalEntradas($currentMonth);
+        $totalSaida = $this->totalSaida($currentMonth);
         $totalPlanejamento = ['total' => 89];
-        $entradasDoAno = $this->entradasDoAno(4);
-        $saidasDoAno = $this->saidasDoAno(4);
+        $entradasDoAno = $this->graficoEntradasDoAno();
+        $saidasDoAno = $this->graficoSaidasDoAno();
 
         return [
             'totalEntradas' => $totalEntradas,
@@ -59,13 +60,41 @@ class DashboardController extends Controller
         ;
     }
 
-    private function entradasDoAno()
+    private function graficoEntradasDoAno()
     {
-        return $this->queryEntradasSaidasDoAno(1);
+        $entradas = $this->queryEntradasSaidasDoAno(1);
+        $grafico = [
+            'labels' => ['Jan', 'Fev', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            'datasets' => [
+                'data' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                'color' => ['rgba(42, 0, 79, 1)`'],
+                'strokeWidth' => 2,
+            ],
+            'legend' => ['Entradas do ano'],
+        ];
+        foreach ($entradas as $value) {
+            $grafico['datasets']['data'][$value->mes - 1] = (float) $value->total;
+        }
+
+        return $grafico;
     }
 
-    private function saidasDoAno()
+    private function graficoSaidasDoAno()
     {
-        return $this->queryEntradasSaidasDoAno(0);
+        $saidas = $this->queryEntradasSaidasDoAno(0);
+        $grafico = [
+            'labels' => ['Jan', 'Fev', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            'datasets' => [
+                'data' => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                'color' => ['rgba(42, 0, 79, 1)`'],
+                'strokeWidth' => 2,
+            ],
+            'legend' => ['Saidas do ano'],
+        ];
+        foreach ($saidas as $value) {
+            $grafico['datasets']['data'][$value->mes - 1] = (float) $value->total;
+        }
+
+        return $grafico;
     }
 }
