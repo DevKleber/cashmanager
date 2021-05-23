@@ -32,7 +32,7 @@ class DashboardController extends Controller
         return \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
             ->whereRaw("MONTH(due_date) = {$mes} AND YEAR(due_date) = {$ano} and t.is_income = true")
             ->where('id_user', auth('api')->user()->id)
-            ->selectRaw('sum(transaction_item.value) as total')
+            ->selectRaw('COALESCE(sum(transaction_item.value),0) as total')
             ->first()
         ;
     }
@@ -44,7 +44,7 @@ class DashboardController extends Controller
         return \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
             ->whereRaw("MONTH(due_date) = {$mes} AND YEAR(due_date) = {$ano} and t.is_income = false")
             ->where('id_user', auth('api')->user()->id)
-            ->selectRaw('sum(transaction_item.value) as total')
+            ->selectRaw('COALESCE(sum(transaction_item.value),0) as total')
             ->first()
         ;
     }
@@ -57,7 +57,7 @@ class DashboardController extends Controller
             ->join('category as c', 'c.id', '=', 't.id_category')
             ->whereRaw("YEAR(due_date) = {$ano} and t.is_income = false")
             ->where('t.id_user', auth('api')->user()->id)
-            ->selectRaw('c.name, sum(transaction_item.value) as total, "asdf" as color,"#7F7F7F" as legendFontColor')
+            ->selectRaw('c.name, COALESCE(sum(transaction_item.value),0) as total, "asdf" as color,"#7F7F7F" as legendFontColor')
             ->groupByRaw('t.id_category, c.name ')
             ->get()
         ;
@@ -70,7 +70,7 @@ class DashboardController extends Controller
         return \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
             ->whereRaw("YEAR(due_date) = {$ano} and t.is_income = {$boEntrada}")
             ->where('id_user', auth('api')->user()->id)
-            ->selectRaw('MONTH(due_date) as mes, sum(transaction_item.value) as total')
+            ->selectRaw('MONTH(due_date) as mes, COALESCE(sum(transaction_item.value),0) as total')
             ->groupByRaw('MONTH(due_date)')
             ->get()
         ;
