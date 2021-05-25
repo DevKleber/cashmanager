@@ -9,7 +9,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $category = \App\Category::where('id_user', auth('api')->user()->id)->get();
+        $category = \App\Category::getCategories();
 
         if (!$category) {
             return response(['response' => 'Categoria não encontrada'], 400);
