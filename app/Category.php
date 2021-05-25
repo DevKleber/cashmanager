@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Request;
 
 class Category extends Model
 {
@@ -57,5 +58,21 @@ class Category extends Model
         }
 
         return $branch;
+    }
+
+    public static function getCategories() {
+        $type = Request::get('type');
+
+        $query = \App\Category::where('id_user', auth('api')->user()->id);
+        
+        if ($type == "income") {
+            $query->where('is_income', true);
+        }
+
+        if ($type == "expense") {
+            $query->where('is_income', false);
+        }
+        
+        return $query->get();
     }
 }
