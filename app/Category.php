@@ -21,7 +21,8 @@ class Category extends Model
             $request['id_category_parent'] = null;
             $request['id_user'] = $id;
             $request['icon'] = $value['icon'];
-            $request['is_income'] = false;
+			$request['is_income'] = isset($value['is_income']) ?? false;
+
             $categories = self::create($request);
             if (!$categories) {
                 return false;
