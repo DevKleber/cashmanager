@@ -33,7 +33,7 @@ class Category extends Model
                 $request['id_category_parent'] = $categories->id;
                 $request['id_user'] = $id;
                 $request['icon'] = $filhas['icon'];
-                $request['is_income'] = false;
+                $request['is_income'] = isset($value['is_income']) ?? false;
                 $subCategories = self::create($request);
                 if (!$subCategories) {
                     return false;

@@ -7,6 +7,10 @@ Route::post('auth/recoverPassword', 'AuthController@recoverPassword');
 Route::get('auth/me', 'AuthController@me');
 Route::post('auth/newaccount', 'AuthController@newAccount');
 
+Route::get('/cat', function () {
+    \App\Category::saveCategoryAutomatically(auth('api')->user()->id);
+});
+
 Route::group(['middleware' => 'apiJwt'], function () {
     Route::post('auth/logout', 'AuthController@logout');
     Route::post('auth/refresh', 'AuthController@refresh');
