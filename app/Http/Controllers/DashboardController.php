@@ -64,12 +64,20 @@ class DashboardController extends Controller
             ->selectRaw('sum(value_percent) as planejado')->first();
 
         $sumTotalGasto = 0;
-        $income = (float) $planejamento[0]->income;
+        $income = 0;
+        $total = 0;
+
+        if (isset($planejamento[0])) {
+            $income = (float) $planejamento[0]->income;
+        }
 
         foreach ($planejamento as $value) {
             $sumTotalGasto += $value->total;
         }
-		$total = $sumTotalGasto * 100 / $income;
+
+        if ($sumTotalGasto) {
+            $total = $sumTotalGasto * 100 / $income;
+        }
 
 
         return ['totalPlanejado' => (float) $totalPlanejado->planejado, 'total'=>$total];
