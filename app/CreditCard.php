@@ -63,6 +63,9 @@ class CreditCard extends Model
             $card->total = $expenseCreditCard->total;
             $ar[] = $card;
         }
+        if (!$ar) {
+            return $creditCards;
+        }
 
         return $ar;
     }

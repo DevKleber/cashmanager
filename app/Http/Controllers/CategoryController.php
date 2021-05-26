@@ -9,14 +9,13 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $category = \App\Category::getCategories();
+        $categoryIncome = \App\Category::where('id_user', auth('api')->user()->id)->where('is_income', true)->get();
+        $categoryOutcome = \App\Category::where('id_user', auth('api')->user()->id)->where('is_income', false)->get();
 
-        if (!$category) {
-            return response(['response' => 'Categoria não encontrada'], 400);
-        }
-        $tree = \App\Category::buildTree($category);
+        $tree = \App\Category::buildTree($categoryIncome);
+        $treeOutcome = \App\Category::buildTree($categoryOutcome);
 
-        return response($tree);
+        return response(['income' => $tree, 'outcome' => $treeOutcome]);
     }
 
     public function store(Request $request)
