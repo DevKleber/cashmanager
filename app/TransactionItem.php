@@ -20,7 +20,7 @@ class TransactionItem extends Model
     {
         $parceledValue = $transaction->value;
         
-        if ($ar['is_income']) {
+        if (!$ar['is_income']) {
             $parceledValue = $transaction->value / $ar['installment'];
         }
         
