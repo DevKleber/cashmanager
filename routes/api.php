@@ -15,12 +15,7 @@ Route::get('/git', function () {
 	} catch (\Throwable $th) {
 		return response($th->getMessage());
 	}
-    // $process = new Process(["./deploy.sh"]);
-    // $process->run(function ($type, $buffer) {
-    //     echo $buffer;
 
-
-    // });
 });
 
 Route::group(['middleware' => 'apiJwt'], function () {
