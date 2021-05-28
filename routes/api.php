@@ -14,7 +14,6 @@ Route::get('/git', function () {
 	} catch (\Throwable $th) {
 		return response($th->getMessage());
 	}
-
 });
 Route::post('/git', function () {
 	$root_path = base_path();
