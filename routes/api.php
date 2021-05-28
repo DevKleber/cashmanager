@@ -9,13 +9,15 @@ Route::get('auth/me', 'AuthController@me');
 Route::post('auth/newaccount', 'AuthController@newAccount');
 
 Route::get('/git', function () {
-    $root_path = base_path();
-    $process = new Process(['cd '.$root_path.'; ./deploy.sh']);
-    $process->run(function ($type, $buffer) {
-        echo $buffer;
-		return response($buffer);
-    });
+	echo exec("git pull");
 
+
+    // $process = new Process(["./deploy.sh"]);
+    // $process->run(function ($type, $buffer) {
+    //     echo $buffer;
+
+    //     return response($buffer);
+    // });
 });
 
 Route::group(['middleware' => 'apiJwt'], function () {
