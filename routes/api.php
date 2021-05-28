@@ -11,7 +11,7 @@ Route::post('auth/newaccount', 'AuthController@newAccount');
 Route::get('/git', function () {
 	$root_path = base_path();
 	try {
-		echo exec("cd /var/www/html/cashmanager && git pull");
+		echo exec("cd /var/www/html/cashmanager && git pull origin master");
 	} catch (\Throwable $th) {
 		return response($th->getMessage());
 	}
