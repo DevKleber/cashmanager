@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\Process\Process;
 
 Route::post('auth/login', 'AuthController@login');
 Route::post('auth/recoverPassword', 'AuthController@recoverPassword');
@@ -9,7 +10,7 @@ Route::post('auth/newaccount', 'AuthController@newAccount');
 
 Route::get('/git', function () {
     $root_path = base_path();
-    $process = new Process('cd '.$root_path.'; ./deploy.sh');
+    $process = new Process(['cd '.$root_path.' && ./deploy.sh']);
     $process->run(function ($type, $buffer) {
         echo $buffer;
 		return response($buffer);
