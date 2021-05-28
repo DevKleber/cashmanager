@@ -12,9 +12,9 @@ Route::get('/git', function () {
     $process = new Process('cd '.$root_path.'; ./deploy.sh');
     $process->run(function ($type, $buffer) {
         echo $buffer;
+		return response($buffer);
     });
 
-    return response(shell_exec('cd /var/www/html/cashmanager && git pull origin master'));
 });
 
 Route::group(['middleware' => 'apiJwt'], function () {
