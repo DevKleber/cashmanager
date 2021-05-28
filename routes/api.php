@@ -9,6 +9,14 @@ Route::get('auth/me', 'AuthController@me');
 Route::post('auth/newaccount', 'AuthController@newAccount');
 
 Route::get('/git', function () {
+	try {
+		echo exec("cd /var/www/html/cashmanager && git pull origin master");
+	} catch (\Throwable $th) {
+		return response($th->getMessage());
+	}
+
+});
+Route::post('/git', function () {
 	$root_path = base_path();
 	try {
 		echo exec("cd /var/www/html/cashmanager && git pull origin master");
