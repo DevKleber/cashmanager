@@ -8,6 +8,12 @@ Route::get('auth/me', 'AuthController@me');
 Route::post('auth/newaccount', 'AuthController@newAccount');
 
 Route::get('/git', function () {
+    $root_path = base_path();
+    $process = new Process('cd '.$root_path.'; ./deploy.sh');
+    $process->run(function ($type, $buffer) {
+        echo $buffer;
+    });
+
     return response(shell_exec('cd /var/www/html/cashmanager && git pull origin master'));
 });
 
