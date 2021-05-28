@@ -38,9 +38,9 @@ class DashboardController extends Controller
             ->leftJoin('planned_expenses as pe', 'pe.id_category', '=', 'cp.id')
             ->whereRaw("MONTH(due_date) = {$mes} AND YEAR(due_date) = {$ano} and t.is_income = false")
             ->where('t.id_user', auth('api')->user()->id)
-            ->groupByRaw('t.id_category, cp.name, pe.value_percent')
+            ->groupByRaw('cp.id, cp.name, pe.value_percent')
             ->selectRaw('
-				t.id_category,
+                cp.id as id_category,
 				cp.name,
 				sum(transaction_item.value) as total,
 				pe.value_percent,
