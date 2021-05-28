@@ -20,7 +20,7 @@ class TransactionItem extends Model
     {
         $parceledValue = $transaction->value;
         
-        if (!$ar['is_income']) {
+        if (!$ar['is_income'] &&  $ar['installment']) {
             $parceledValue = $transaction->value / $ar['installment'];
         }
 
@@ -62,7 +62,7 @@ class TransactionItem extends Model
         if ($is_paid) {
             return $due_date;
         }
-        
+
         if ($mountIncrement) {
             $due_date = $due_date->modify("+ {$mountIncrement} month");
         }
