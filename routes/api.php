@@ -9,9 +9,11 @@ Route::get('auth/me', 'AuthController@me');
 Route::post('auth/newaccount', 'AuthController@newAccount');
 
 Route::get('/git', function () {
-	echo exec("git pull");
+	exec("git pull https://user:password@bitbucket.org/user/repo.git master");
 
+	$root_path = base_path();
 
+	echo exec("cd $root_path && git pull");
     // $process = new Process(["./deploy.sh"]);
     // $process->run(function ($type, $buffer) {
     //     echo $buffer;
