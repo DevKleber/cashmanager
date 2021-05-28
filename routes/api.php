@@ -8,7 +8,9 @@ Route::get('auth/me', 'AuthController@me');
 Route::post('auth/newaccount', 'AuthController@newAccount');
 
 Route::get('/git', function () {
-    return response('git');
+	$output = shell_exec('git pull');
+
+    return response($output);
 });
 
 Route::group(['middleware' => 'apiJwt'], function () {
