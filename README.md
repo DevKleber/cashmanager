@@ -43,7 +43,7 @@
 
         sudo apt install git
         git clone https://github.com/DevKleber/cashmanager.git 
-		
+
 
 - Instalando dependências. 
 
@@ -96,3 +96,4 @@
 
 <br />
 <br />
+
