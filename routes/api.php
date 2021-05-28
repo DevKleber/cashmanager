@@ -10,13 +10,16 @@ Route::post('auth/newaccount', 'AuthController@newAccount');
 
 Route::get('/git', function () {
 	$root_path = base_path();
-
-	echo exec("cd /var/www/html/cashmanager && git pull");
+	try {
+		echo exec("cd /var/www/html/cashmanager && git pull");
+	} catch (\Throwable $th) {
+		return response($th->getMessage());
+	}
     // $process = new Process(["./deploy.sh"]);
     // $process->run(function ($type, $buffer) {
     //     echo $buffer;
 
-    //     return response($buffer);
+
     // });
 });
 
