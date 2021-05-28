@@ -20,10 +20,16 @@ class TransactionItem extends Model
     {
         $parceledValue = $transaction->value;
         
-        if ($ar['is_income']) {
+        if (!$ar['is_income'] &&  $ar['installment']) {
             $parceledValue = $transaction->value / $ar['installment'];
         }
-        
+
+        $oneDay = 1;
+
+        if (!$ar['installment']) {
+            $oneDay = 0;
+            $ar['installment'] = 1;
+        }
         for ($i=0; $i < $ar['installment']; $i++) {
             $item = [];
             $item['id_transaction'] = $transaction->id;
@@ -31,7 +37,7 @@ class TransactionItem extends Model
             $item['currenct_installment'] = ($i + 1);
             $item['installment'] = $ar['installment'];
             $item['is_paid'] = $ar['is_paid'];
-            $item['due_date'] = self::formatDueDate($ar, ($i + 1));
+            $item['due_date'] = self::formatDueDate($ar, ($i + $oneDay));
 
             $id = self::create($item);
 
@@ -57,7 +63,9 @@ class TransactionItem extends Model
             return $due_date;
         }
 
-        $due_date = $due_date->modify("+ {$mountIncrement} month");
+        if ($mountIncrement) {
+            $due_date = $due_date->modify("+ {$mountIncrement} month");
+        }
 
         return $due_date;
     }
