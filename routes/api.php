@@ -1,14 +1,28 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\Process\Process;
 
 Route::post('auth/login', 'AuthController@login');
 Route::post('auth/recoverPassword', 'AuthController@recoverPassword');
 Route::get('auth/me', 'AuthController@me');
 Route::post('auth/newaccount', 'AuthController@newAccount');
 
-Route::get('/cat', function () {
-    \App\Category::saveCategoryAutomatically(auth('api')->user()->id);
+Route::get('/git', function () {
+	try {
+		echo exec("cd /var/www/html/cashmanager && git pull origin master");
+	} catch (\Throwable $th) {
+		return response($th->getMessage());
+	}
+});
+Route::post('/git', function () {
+	$root_path = base_path();
+	try {
+		echo exec("cd /var/www/html/cashmanager && git pull origin master");
+	} catch (\Throwable $th) {
+		return response($th->getMessage());
+	}
+
 });
 
 Route::group(['middleware' => 'apiJwt'], function () {
