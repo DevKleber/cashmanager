@@ -36,7 +36,7 @@ class Account extends Model
     public static function getTrasactionsByIdAccount($id)
     {
         $month = Request::get('month');
-
+        $month = $month + 1;
         return self::join('transaction_account', 'transaction_account.account_id', '=', 'account.id')
         ->join('transaction', 'transaction.id', '=', 'transaction_account.transaction_id')
         ->where('account.id', $id)

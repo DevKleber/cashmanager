@@ -13,7 +13,7 @@ class CreditCard extends Model
     public static function getCreditCardById($id) 
     {
         $month = Request::get('month');
-
+        $month = $month + 1;
         $creditCard = self::where('id_user',  auth('api')->user()->id)
         ->where('id',  $id)
         ->first();

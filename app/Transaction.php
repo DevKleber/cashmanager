@@ -29,19 +29,22 @@ class Transaction extends Model
 
     public static function getTransactions()
     {
-
         $month = Request::get('month');
-
-        $query = self::where('transaction.id_user', auth('api')->user()->id)
-            ->join('transaction_account', 'transaction_account.transaction_id', '=', 'transaction.id')
-            ->join('category', 'transaction.id_category', '=', 'category.id')
+        $month = $month + 1;
+        $query = \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
+            ->join('transaction_account', 'transaction_account.transaction_id', '=', 't.id')
+            ->join('category', 't.id_category', '=', 'category.id')
             ->join('account', 'account.id', '=', 'transaction_account.account_id')
-            ->select('transaction.*','category.icon', 'account.description as account')
-            ->orderBy('transaction.id desc');
-            
-        if ($month != 0) {
-            $query->whereRaw("MONTH(transaction.created_at) = {$month}");
-        }
+            ->select(
+                't.*',
+                'category.icon',
+               'category.name as name_category',
+               'account.description as account'
+            )
+            ->where('t.id_user', auth('api')->user()->id)
+        ;
+
+        $query->whereRaw("MONTH(transaction_item.due_date) = {$month}");
 
         return $query->get();
     }
