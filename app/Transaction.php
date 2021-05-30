@@ -36,7 +36,8 @@ class Transaction extends Model
             ->join('transaction_account', 'transaction_account.transaction_id', '=', 'transaction.id')
             ->join('category', 'transaction.id_category', '=', 'category.id')
             ->join('account', 'account.id', '=', 'transaction_account.account_id')
-            ->select('transaction.*','category.icon', 'account.description as account');
+            ->select('transaction.*','category.icon', 'account.description as account')
+            ->orderBy('transaction.id desc');
             
         if ($month != 0) {
             $query->whereRaw("MONTH(transaction.created_at) = {$month}");
