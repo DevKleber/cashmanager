@@ -31,13 +31,15 @@ class TransactionController extends Controller
             return response(['message' => 'Erro ao salvar Transação'], 400);
         }
 
-        $arTransactionAccount['account_id'] = $ar['id_account'];
-        $arTransactionAccount['transaction_id'] = $transaction->id;
+        if ($ar['id_account']) {
+            $arTransactionAccount['account_id'] = $ar['id_account'];
+            $arTransactionAccount['transaction_id'] = $transaction->id;
+    
+            $transactionAccount = \App\TransactionAccount::create($arTransactionAccount);
 
-        $transactionAccount = \App\TransactionAccount::create($arTransactionAccount);
-
-        if (!$transactionAccount) {
-            return response(['message' => 'Erro ao salvar transaction account'], 400);
+            if (!$transactionAccount) {
+                return response(['message' => 'Erro ao salvar transaction account'], 400);
+            }
         }
 
         if (!\App\TransactionItem::saveItens($ar, $transaction)) {
