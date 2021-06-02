@@ -20,7 +20,7 @@ class Transaction extends Model
         if (!$transaction) {
             return false;
         }
-        
+
         $transaction = $transaction->toArray();
         $transaction['itens'] = \App\TransactionItem::getItensByIdTransaction($id);
 
@@ -34,6 +34,7 @@ class Transaction extends Model
 
         $query = \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
             ->join('category', 't.id_category', '=', 'category.id')
+            ->lefJoin('category as cp', 'cp.id', '=', 'category.id_category_parent')
             ->select(
                 'transaction_item.*',
                 't.description',
@@ -41,7 +42,8 @@ class Transaction extends Model
                 't.is_income',
                 't.id',
                 'category.icon',
-               'category.name as name_category'
+               'category.name as name_category',
+			   'cp.name as name_parent'
             )
             ->where('t.id_user', auth('api')->user()->id);
 
