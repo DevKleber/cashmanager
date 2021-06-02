@@ -19,12 +19,26 @@ class TransactionItem extends Model
     public static function saveItens(array $ar, Transaction $transaction)
     {
         $parceledValue = $transaction->value;
+        $oneDay = 1;
+        $dayCloseCard = false;
         
         if (!$ar['is_income'] &&  $ar['installment']) {
             $parceledValue = $transaction->value / $ar['installment'];
+
+            if ($ar['id_creditcard']) {
+                $creditCard = \App\CreditCard::find($ar['id_creditcard']);
+
+                if ($creditCard) {
+                    $dia = (int) date("d");
+                    if ((int) date("d") <= (int) $creditCard->closing_day) {
+                        $dayCloseCard = true;
+                        
+                    }
+                }
+                
+            }
         }
 
-        $oneDay = 1;
 
         if (!$ar['installment']) {
             $oneDay = 0;
@@ -37,8 +51,7 @@ class TransactionItem extends Model
             $item['currenct_installment'] = ($i + 1);
             $item['installment'] = $ar['installment'];
             $item['is_paid'] = $ar['is_paid'];
-            $item['due_date'] = self::formatDueDate($ar, ($i + $oneDay));
-
+            $item['due_date'] = self::formatDueDate($ar, ($i + $oneDay), $dayCloseCard);
             $id = self::create($item);
 
             if (!$id) {
@@ -48,7 +61,7 @@ class TransactionItem extends Model
         return true;
     }
 
-    public static function formatDueDate($ar, $mountIncrement)
+    public static function formatDueDate($ar, $mountIncrement, $dayCloseCard)
     {
         $due_date = $ar['due_date'];
         $is_paid = $ar['is_paid'];
@@ -57,15 +70,20 @@ class TransactionItem extends Model
             return null;
         }
 
+        
         $due_date = new \DateTime($due_date);
-
+        
         if ($is_paid) {
             return $due_date;
         }
 
-        if ($mountIncrement) {
-            $due_date = $due_date->modify("+ {$mountIncrement} month");
+        if ($dayCloseCard) {
+            $mountIncrement = $mountIncrement - 1;
         }
+
+        // if ($mountIncrement) {
+        $due_date = $due_date->modify("+ {$mountIncrement} month");
+        // }
 
         return $due_date;
     }
