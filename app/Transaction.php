@@ -34,7 +34,7 @@ class Transaction extends Model
 
         $query = \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
             ->join('category as c', 't.id_category', '=', 'c.id')
-            ->lefJoin('category as cp', 'cp.id', '=', 'c.id_category_parent')
+            ->leftJoin('category as cp', 'cp.id', '=', 'c.id_category_parent')
             ->select(
                 'transaction_item.*',
                 't.description',
