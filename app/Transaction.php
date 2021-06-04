@@ -29,10 +29,11 @@ class Transaction extends Model
 
     public static function getTransactions()
     {
+        $year = date('Y');
         $month = Request::get('month');
         $month = $month + 1;
 
-        $query = \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
+        return \App\TransactionItem::join('transaction as t', 't.id', '=', 'transaction_item.id_transaction')
             ->join('category as c', 't.id_category', '=', 'c.id')
             ->leftJoin('category as cp', 'cp.id', '=', 'c.id_category_parent')
             ->select(
@@ -45,10 +46,9 @@ class Transaction extends Model
                'c.name as name_category',
 			   'cp.name as name_parent'
             )
-            ->where('t.id_user', auth('api')->user()->id);
-
-        $query->whereRaw("MONTH(transaction_item.due_date) = {$month}");
-
-        return $query->get();
+            ->where('t.id_user', auth('api')->user()->id)
+            ->whereRaw("MONTH(transaction_item.due_date) = {$month}")
+            ->whereRaw("YEAR(transaction_item.due_date) = {$year}")
+            ->get();
     }
 }

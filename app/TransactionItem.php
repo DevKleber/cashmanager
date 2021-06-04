@@ -36,7 +36,10 @@ class TransactionItem extends Model
                     }
                 }
                 
-            }
+            } else {
+                $dayCloseCard = true;
+            } 
+
         }
 
 
@@ -77,13 +80,11 @@ class TransactionItem extends Model
             return $due_date;
         }
 
-        if ($dayCloseCard) {
+        if ($ar['is_income'] || $dayCloseCard) {
             $mountIncrement = $mountIncrement - 1;
         }
 
-        // if ($mountIncrement) {
         $due_date = $due_date->modify("+ {$mountIncrement} month");
-        // }
 
         return $due_date;
     }
