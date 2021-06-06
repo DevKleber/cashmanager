@@ -34,7 +34,7 @@ class TransactionController extends Controller
         if ($ar['id_account']) {
             $arTransactionAccount['account_id'] = $ar['id_account'];
             $arTransactionAccount['transaction_id'] = $transaction->id;
-    
+
             $transactionAccount = \App\TransactionAccount::create($arTransactionAccount);
 
             if (!$transactionAccount) {
@@ -57,7 +57,7 @@ class TransactionController extends Controller
 
     public function show($id)
     {
-        $transaction = \App\Transaction::getTransactionById($id);
+        $transaction = \App\Transaction::getDetailTransactionById($id);
 
         if (!$transaction) {
             return response(['response' => 'Não existe Transação'], 400);
@@ -70,7 +70,7 @@ class TransactionController extends Controller
     {
         $transaction = \App\Transaction::find($id);
 
-        
+
         if ($transaction) {
             if ($transaction['id_user'] != auth('api')->user()->id) {
                 return response(['error' => 'Não tem permissão para alterar esse Transação'], 400);
@@ -95,7 +95,7 @@ class TransactionController extends Controller
         if (!$transaction) {
             return response(['response' => 'Transação Não encontrado'], 400);
         }
-        
+
         $transaction->is_active = false;
 
         if (!$transaction->save()) {

@@ -15,7 +15,35 @@ class Transaction extends Model
     {
         $transaction = self::where('id_user', auth('api')->user()->id)
             ->where('id', $id)
-            ->first();
+            ->first()
+        ;
+
+        if (!$transaction) {
+            return false;
+        }
+
+        $transaction = $transaction->toArray();
+        $transaction['itens'] = \App\TransactionItem::getItensByIdTransaction($id);
+
+        return $transaction;
+    }
+
+    public static function getDetailTransactionById(int $id)
+    {
+        $transaction = self::join('category as c', 'transaction.id_category', '=', 'c.id')
+            ->leftJoin('category as cp', 'cp.id', '=', 'c.id_category_parent')
+            ->where('transaction.id_user', auth('api')->user()->id)
+            ->where('transaction.id', $id)
+            ->select(
+                'transaction.description',
+                'transaction.name',
+                'transaction.is_income',
+                'transaction.id',
+				'transaction.value',
+                'c.icon',
+                'c.name as name_category',
+                'cp.name as name_parent'
+            )->first();
 
         if (!$transaction) {
             return false;
@@ -42,10 +70,11 @@ class Transaction extends Model
                 't.is_income',
                 't.id',
                 'c.icon',
-               'c.name as name_category',
-			   'cp.name as name_parent'
+                'c.name as name_category',
+                'cp.name as name_parent'
             )
-            ->where('t.id_user', auth('api')->user()->id);
+            ->where('t.id_user', auth('api')->user()->id)
+        ;
 
         $query->whereRaw("MONTH(transaction_item.due_date) = {$month}");
 
