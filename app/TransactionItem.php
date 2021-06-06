@@ -21,7 +21,7 @@ class TransactionItem extends Model
         $parceledValue = $transaction->value;
         $oneDay = 1;
         $dayCloseCard = false;
-        
+
         if (!$ar['is_income'] &&  $ar['installment']) {
             $parceledValue = $transaction->value / $ar['installment'];
 
@@ -32,11 +32,14 @@ class TransactionItem extends Model
                     $dia = (int) date("d");
                     if ((int) date("d") <= (int) $creditCard->closing_day) {
                         $dayCloseCard = true;
-                        
+
                     }
                 }
-                
+
+            } else {
+                $dayCloseCard = true;
             }
+
         }
 
 
@@ -70,20 +73,18 @@ class TransactionItem extends Model
             return null;
         }
 
-        
+
         $due_date = new \DateTime($due_date);
-        
+
         if ($is_paid) {
             return $due_date;
         }
 
-        if ($dayCloseCard) {
+        if ($ar['is_income'] || $dayCloseCard) {
             $mountIncrement = $mountIncrement - 1;
         }
 
-        // if ($mountIncrement) {
         $due_date = $due_date->modify("+ {$mountIncrement} month");
-        // }
 
         return $due_date;
     }
