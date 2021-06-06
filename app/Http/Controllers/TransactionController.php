@@ -70,7 +70,6 @@ class TransactionController extends Controller
     {
         $transaction = \App\Transaction::find($id);
 
-
         if ($transaction) {
             if ($transaction['id_user'] != auth('api')->user()->id) {
                 return response(['error' => 'Não tem permissão para alterar esse Transação'], 400);
@@ -90,22 +89,28 @@ class TransactionController extends Controller
 
     public function destroy($id)
     {
+        \DB::beginTransaction();
         $transaction = \App\Transaction::find($id);
+        $transactionAccount = \App\TransactionAccount::find($transaction->id);
 
-        if (!$transaction) {
-            return response(['response' => 'Transação Não encontrado'], 400);
+        if ($transaction->id_user !== auth('api')->user()->id) {
+            return response(['response' => 'Sem permissão'], 400);
         }
 
-        $transaction->is_active = false;
+        \App\TransactionItem::where('id_transaction', $transaction->id)->delete();
 
-        if (!$transaction->save()) {
-            return response(['response' => 'Erro ao deletar Transação'], 400);
+        if ($transactionAccount) {
+            $transactionAccount->delete();
+
+            if (!\App\Account::getBalanceBackByTransaction($id, $transaction, $transactionAccount)) {
+                return response(['response' => 'Erro ao deletar Movimentação'], 400);
+            }
         }
+        $transaction->delete();
 
-        if (!\App\Account::getBalanceBackByTransaction($id, $transaction)) {
-            return response(['response' => 'Erro ao deletar Transação'], 400);
-        }
+        // \DB::rollback();
+        \DB::commit();
 
-        return response(['response' => 'Transação Inativado com sucesso']);
+        return response(['response' => 'Movimentação deletada com sucesso']);
     }
 }

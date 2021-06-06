@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use \App\Transaction;
 use Illuminate\Support\Facades\Request;
 
 class Account extends Model
@@ -37,25 +36,22 @@ class Account extends Model
     {
         $month = Request::get('month');
         $month = $month + 1;
+
         return self::join('transaction_account', 'transaction_account.account_id', '=', 'account.id')
-        ->join('transaction', 'transaction.id', '=', 'transaction_account.transaction_id')
-        ->where('account.id', $id)
-        ->whereRaw("MONTH(transaction.created_at) = {$month}")
-        ->get();
+            ->join('transaction', 'transaction.id', '=', 'transaction_account.transaction_id')
+            ->where('account.id', $id)
+            ->whereRaw("MONTH(transaction.created_at) = {$month}")
+            ->get()
+        ;
     }
 
-
-    public static function getBalanceBackByTransaction(int $id, Transaction $transaction)
+    public static function getBalanceBackByTransaction(int $id, Transaction $transaction, TransactionAccount $transactionAccount)
     {
-
-        $transactionAccount = \App\TransactionAccount::where('transaction_id', $id)->first();
-
         if (!$transactionAccount) {
             return false;
         }
 
-        $account = self::find($transactionAccount->transaction_id);
-
+        $account = self::find($transactionAccount->account_id);
 
         if ($transaction->is_income) {
             $ar['current_balance'] = $account->current_balance - $transaction->value;
