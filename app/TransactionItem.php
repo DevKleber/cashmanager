@@ -22,7 +22,7 @@ class TransactionItem extends Model
         $oneDay = 1;
         $dayCloseCard = false;
 
-        if (!$ar['is_income'] &&  $ar['installment']) {
+        if (!$ar['is_income'] && $ar['installment']) {
             $parceledValue = $transaction->value / $ar['installment'];
 
             if ($ar['id_creditcard']) {
@@ -80,7 +80,7 @@ class TransactionItem extends Model
             return $due_date;
         }
 
-        if ($ar['is_income'] || $dayCloseCard) {
+        if (($ar['is_income'] && $mountIncrement > 0) || $dayCloseCard) {
             $mountIncrement = $mountIncrement - 1;
         }
 
