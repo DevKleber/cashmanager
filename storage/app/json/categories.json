@@ -19,23 +19,13 @@
 				"is_income": true,
 				"filhas": [
 					{
-						"no_categoria": "Juros poupança",
+						"no_categoria": "Renda fixa",
 						"icon": "water-damage",
 						"is_income": true
 					},
 					{
-						"no_categoria": "Juros CDB",
+						"no_categoria": "Renda Variável",
 						"icon": "cloud",
-						"is_income": true
-					},
-					{
-						"no_categoria": "Dividendo",
-						"icon": "power",
-						"is_income": true
-					},
-					{
-						"no_categoria": "Juros sobre capital próprio",
-						"icon": "fire-extinguisher",
 						"is_income": true
 					}
 				]
@@ -57,20 +47,20 @@
 						"icon": "power"
 					},
 					{
-						"no_categoria": "Gás",
-						"icon": "fire-extinguisher"
-					},
-					{
 						"no_categoria": "Internet",
 						"icon": "settings-ethernet"
 					},
 					{
 						"no_categoria": "IPTU",
-						"icon": "skull-crossbones"
+						"icon": "policy"
 					},
 					{
 						"no_categoria": "Manutenção / Reforma",
 						"icon": "format-paint"
+					},
+					{
+						"no_categoria": "Outros",
+						"icon": "home"
 					}
 				]
 			},
@@ -87,78 +77,88 @@
 						"icon": "local-grocery-store"
 					},
 					{
-						"no_categoria": "Padaria",
-						"icon": "store-mall-directory"
+						"no_categoria": "Suplemento",
+						"icon": "hdr-strong"
 					},
 					{
-						"no_categoria": "Suplemento",
-						"icon": "pill"
+						"no_categoria": "Outros",
+						"icon": "food-bank"
+					}
+				]
+			},
+			{
+				"no_categoria": "Eletrônico",
+				"icon": "usb",
+				"filhas": [
+					{
+						"no_categoria": "Computador",
+						"icon": "computer"
+					},
+					{
+						"no_categoria": "Musica",
+						"icon": "library-music"
+					},
+					{
+						"no_categoria": "Outros",
+						"icon": "select-all"
 					}
 				]
 			},
 			{
 				"no_categoria": "Saúde",
-				"icon": "heart-plus",
+				"icon": "align-vertical-center",
 				"filhas": [
 					{
 						"no_categoria": "Academia",
-						"icon": "heart-plus"
+						"icon": "directions-run"
 					},
 					{
 						"no_categoria": "Consulta",
-						"icon": "diagnoses"
-					},
-					{
-						"no_categoria": "Dentista",
-						"icon": "tooth-outline"
-					},
-					{
-						"no_categoria": "Exame",
-						"icon": "microscope"
+						"icon": "local-hospital"
 					},
 					{
 						"no_categoria": "Farmácia",
-						"icon": "clinic-medical"
+						"icon": "local-pharmacy"
 					},
 					{
 						"no_categoria": "Plano de Saúde",
+						"icon": "local-hospital"
+					},
+					{
+						"no_categoria": "Outros",
 						"icon": "local-hospital"
 					}
 				]
 			},
 			{
 				"no_categoria": "Educação",
-				"icon": "chalkboard-teacher",
+				"icon": "cast-for-education",
 				"filhas": [
 					{
 						"no_categoria": "Curso",
-						"icon": "chalkboard"
-					},
-					{
-						"no_categoria": "Curso Udemy",
-						"icon": "chalkboard"
+						"icon": "class"
 					},
 					{
 						"no_categoria": "Inglês",
-						"icon": "globe-americas"
-					},
-					{
-						"no_categoria": "Jornais/revistas",
-						"icon": "newspaper"
+						"icon": "emoji-flags"
 					},
 					{
 						"no_categoria": "Livros",
-						"icon": "book"
+						"icon": "menu-book"
 					},
 					{
 						"no_categoria": "Material escolar",
-						"icon": "book-open"
+						"icon": "menu-book"
+					},
+					{
+						"no_categoria": "Outros",
+						"icon": "cast-for-education"
 					}
 				]
 			},
 			{
 				"no_categoria": "Despesas Pessoais",
-				"icon": "meh",
+				"icon": "person",
 				"filhas": [
 					{
 						"no_categoria": "Cuidados e higiene pessoal",
@@ -166,11 +166,11 @@
 					},
 					{
 						"no_categoria": "Roupas e acessórios",
-						"icon": "tshirt"
+						"icon": "soap"
 					},
 					{
-						"no_categoria": "Presentes",
-						"icon": "gift"
+						"no_categoria": "Outros",
+						"icon": "soap"
 					}
 				]
 			},
@@ -180,79 +180,91 @@
 				"filhas": [
 					{
 						"no_categoria": "Combustível",
-						"icon": "gas-pump"
+						"icon": "local-gas-station"
 					},
 					{
 						"no_categoria": "Estacionamento",
-						"icon": "sign"
+						"icon": "local-car-wash"
 					},
 					{
 						"no_categoria": "IPVA",
-						"icon": "radiation"
+						"icon": "local-atm"
 					},
 					{
 						"no_categoria": "Manutenção",
-						"icon": "wrench"
+						"icon": "car-repair"
 					},
 					{
 						"no_categoria": "Seguro",
-						"icon": "car-crash"
+						"icon": "monetization-on"
 					},
 					{
 						"no_categoria": "Transporte público",
-						"icon": "bus"
+						"icon": "directions-bus"
+					},
+					{
+						"no_categoria": "Outros",
+						"icon": "subway"
 					}
 				]
 			},
 			{
 				"no_categoria": "Lazer",
-				"icon": "laugh-beam",
+				"icon": "local-bar",
 				"filhas": [
 					{
 						"no_categoria": "Bares e restaurantes",
-						"icon": "utensils"
+						"icon": "local-drink"
 					},
 					{
 						"no_categoria": "Cinema",
-						"icon": "film"
+						"icon": "local-movies"
 					},
 					{
 						"no_categoria": "Passeios/parques/praia",
-						"icon": "route"
+						"icon": "local-parking"
 					},
 					{
 						"no_categoria": "Viagens",
-						"icon": "route"
+						"icon": "wallet-travel"
+					},
+					{
+						"no_categoria": "resenha",
+						"icon": "local-drink"
+					},
+					{
+						"no_categoria": "Outros",
+						"icon": "local-bar"
 					}
 				]
 			},
 			{
 				"no_categoria": "Pet",
-				"icon": "dog",
+				"icon": "pets",
 				"filhas": [
 					{
 						"no_categoria": "Banho",
-						"icon": "shower"
+						"icon": "pets"
 					},
 					{
 						"no_categoria": "Medicamentos",
-						"icon": "pills"
-					},
-					{
-						"no_categoria": "Outros",
-						"icon": "paw"
+						"icon": "pets"
 					},
 					{
 						"no_categoria": "Ração",
-						"icon": "bone"
+						"icon": "pets"
 					},
 					{
 						"no_categoria": "Tosa",
-						"icon": "cut"
+						"icon": "content-cut"
 					},
 					{
 						"no_categoria": "Veterinário",
-						"icon": "head-side-mask"
+						"icon": "masks"
+					},
+					{
+						"no_categoria": "Outros",
+						"icon": "pets"
 					}
 				]
 			},
@@ -270,21 +282,25 @@
 					},
 					{
 						"no_categoria": "Spotify",
-						"icon": "headphones"
+						"icon": "music-note"
 					},
 					{
 						"no_categoria": "YouTube",
-						"icon": "play"
+						"icon": "play-arrow"
+					},
+					{
+						"no_categoria": "Outros",
+						"icon": "tv"
 					}
 				]
 			},
 			{
 				"no_categoria": "Demais despesas",
-				"icon": "th",
+				"icon": "tag-faces",
 				"filhas": [
 					{
 						"no_categoria": "Operadoras de telefonia",
-						"icon": "headset"
+						"icon": "headset-mic"
 					}
 				]
 			}
