@@ -42,6 +42,17 @@ class TransactionController extends Controller
             }
         }
 
+        if ($ar['id_creditcard']) {
+            $arExpenseCreditCard['id_credit_card'] = $ar['id_creditcard'];
+            $arExpenseCreditCard['id_transaction'] = $transaction->id;
+
+            $expenseCreditCard = \App\ExpenseCreditCard::create($arExpenseCreditCard);
+
+            if (!$expenseCreditCard) {
+                return response(['message' => 'Erro ao salvar transaction credit card'], 400);
+            }
+        }
+
         if (!\App\TransactionItem::saveItens($ar, $transaction)) {
             return response(['message' => 'Erro ao salvar itens'], 400);
         }

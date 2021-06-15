@@ -14,6 +14,8 @@ class CreditCard extends Model
     {
         $month = Request::get('month');
         $month = $month + 1;
+        $year = date('Y');
+
         $creditCard = self::where('id_user',  auth('api')->user()->id)
         ->where('id',  $id)
         ->first();
@@ -28,6 +30,7 @@ class CreditCard extends Model
             ->select('transaction.*', 'expense_credit_card.id_transaction', 'category.icon')
             ->where('credit_card.id_user', auth('api')->user()->id)
             ->whereRaw("MONTH(transaction.created_at) = {$month}")
+            ->whereRaw("YEAR(transaction.created_at) = {$year}")
             ->where('credit_card.id', $creditCard->id)->get();
         
         $total = 0;
