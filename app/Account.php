@@ -36,11 +36,13 @@ class Account extends Model
     {
         $month = Request::get('month');
         $month = $month + 1;
+        $year = date('Y');
 
         return self::join('transaction_account', 'transaction_account.account_id', '=', 'account.id')
             ->join('transaction', 'transaction.id', '=', 'transaction_account.transaction_id')
             ->where('account.id', $id)
             ->whereRaw("MONTH(transaction.created_at) = {$month}")
+            ->whereRaw("YEAR(transaction.created_at) = {$year}")
             ->get()
         ;
     }
