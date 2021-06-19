@@ -12,6 +12,7 @@ class DashboardController extends Controller
         $totalEntradas = $this->totalEntradas($currentMonth);
         $totalSaida = $this->totalSaida($currentMonth);
         $planejamento = $this->planejamentoSummary($currentMonth);
+        $planejamentoSemMovimentacao = $this->planejamentoSemMovimentacao($planejamento);
         $totalPlanejamento = $this->calculoPlanejamento($planejamento);
         $entradasDoAno = $this->graficoEntradasDoAno();
         $saidasDoAno = $this->graficoSaidasDoAno();
@@ -22,11 +23,30 @@ class DashboardController extends Controller
             'totalSaida' => $totalSaida,
             'totalPlanejamento' => $totalPlanejamento,
             'planejamento' => $planejamento,
+            'planejamentoSemMovimentacao' => $planejamentoSemMovimentacao,
             'entradasDoAno' => $entradasDoAno,
             'saidasDoAno' => $saidasDoAno,
             'categoriasDoAno' => $categoriasDoAno,
         ];
     }
+	private function planejamentoSemMovimentacao($planejamento){
+
+		$ids = [];
+		foreach ($planejamento as $key => $value) {
+			$ids[] = $value->id_category;
+		}
+		return \App\PlannedExpenses::whereNotIn('id_category',$ids)
+		->join('category as c', 'c.id', '=', 'planned_expenses.id_category')
+		->selectRaw("
+			id_category,
+			name,
+			'' as total,
+			value_percent,
+			icon
+			"
+		)
+		->get();
+	}
 
     private function planejamentoSummary($mes, $ano = null)
     {
