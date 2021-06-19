@@ -37,6 +37,7 @@ class DashboardController extends Controller
 		}
 		return \App\PlannedExpenses::whereNotIn('id_category',$ids)
 		->join('category as c', 'c.id', '=', 'planned_expenses.id_category')
+		->where('c.id_user', auth('api')->user()->id)
 		->selectRaw("
 			id_category,
 			name,
