@@ -40,6 +40,16 @@ class TransactionController extends Controller
             if (!$transactionAccount) {
                 return response(['message' => 'Erro ao salvar transaction account'], 400);
             }
+
+            $account = \App\Account::find($ar['id_account']);
+            
+            if ($ar['is_income']) {
+                $account->current_balance = $account->current_balance + $transaction->value;
+            } else {
+                $account->current_balance = $account->current_balance - $transaction->value;
+            }
+
+            $account->save();
         }
 
         if ($ar['id_creditcard']) {
