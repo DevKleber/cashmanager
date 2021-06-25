@@ -30,10 +30,27 @@ Route::group(['middleware' => 'apiJwt'], function () {
     Route::post('auth/refresh', 'AuthController@refresh');
     Route::post('auth/validate', 'AuthController@tokenIsValidate');
     Route::put('auth/changePassword', 'AuthController@changePassword');
-    Route::resource('categories', 'CategoryController');
-    Route::resource('accounts', 'AccountController');
-    Route::resource('credit-card', 'CreditCardController');
-    Route::resource('transactions', 'TransactionController');
+
+    Route::post('categories', 'CategoryController@store');
+    Route::get('categories/{id}', 'CategoryController@show');
+    Route::get('categories', 'CategoryController@index');
+    Route::put('categories', 'CategoryController@update');
+
+    Route::post('accounts', 'AccountController@store');
+    Route::get('accounts/{id}', 'AccountController@show');
+    Route::get('accounts', 'AccountController@index');
+    Route::put('accounts', 'AccountController@update');
+
+    Route::post('credit-card', 'CreditCardController@store');
+    Route::get('credit-card/{id}', 'CreditCardController@show');
+    Route::get('credit-card', 'CreditCardController@index');
+    Route::put('credit-card', 'CreditCardController@update');
+
+    Route::post('transactions', 'TransactionController@store');
+    Route::get('transactions/{id}', 'TransactionController@show');
+    Route::get('transactions', 'TransactionController@index');
+    Route::put('transactions', 'TransactionController@update');
+
     Route::get('planned-expenses', 'PlannedExpensesController@index');
     Route::put('planned-expenses/{id}', 'PlannedExpensesController@update');
     Route::post('planned-expenses', 'PlannedExpensesController@store');

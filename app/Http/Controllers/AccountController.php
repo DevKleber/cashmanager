@@ -38,11 +38,12 @@ class AccountController extends Controller
     {
         $account = \App\Account::find($id);
 
-        if ($account->id_user != auth('api')->user()->id) {
-            return response(['error' => 'Não tem permissão para acessar essa Conta'], 400);
-        }
         if (!$account) {
             return response(['response' => 'Não existe Conta'], 400);
+        }
+        
+        if ($account->id_user != auth('api')->user()->id) {
+            return response(['error' => 'Não tem permissão para acessar essa Conta'], 400);
         }
 
         $account->items = \App\Account::getTrasactionsByIdAccount($id);
