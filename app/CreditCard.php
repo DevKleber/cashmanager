@@ -26,11 +26,23 @@ class CreditCard extends Model
 
         $expenseCreditCard = self::join('expense_credit_card', 'credit_card.id', '=', 'expense_credit_card.id_credit_card')
             ->join('transaction', 'transaction.id', '=', 'expense_credit_card.id_transaction')
+            ->join('transaction_item', 'transaction.id', '=', 'transaction_item.id_transaction')
             ->join('category', 'category.id', '=', 'transaction.id_category')
-            ->select('transaction.*', 'expense_credit_card.id_transaction', 'category.icon')
+            ->select(
+                'transaction.description', 
+                'transaction.id_user', 
+                'transaction.is_income', 
+                'transaction.name', 
+                'transaction.id_category', 
+                'transaction_item.value',
+                'transaction_item.created_at', 
+                'transaction_item.due_date', 
+                'expense_credit_card.id_transaction', 
+                'category.icon'
+            )
             ->where('credit_card.id_user', auth('api')->user()->id)
-            ->whereRaw("MONTH(transaction.created_at) = {$month}")
-            ->whereRaw("YEAR(transaction.created_at) = {$year}")
+            ->whereRaw("MONTH(transaction_item.due_date) = {$month}")
+            ->whereRaw("YEAR(transaction_item.due_date) = {$year}")
             ->where('credit_card.id', $creditCard->id)->get();
         
         $total = 0;
@@ -61,7 +73,8 @@ class CreditCard extends Model
                 ->join('transaction', 'transaction.id', '=', 'expense_credit_card.id_transaction')
                 ->join('category', 'category.id', '=', 'transaction.id_category')
                 ->where('credit_card.id_user', auth('api')->user()->id)
-                ->where('credit_card.id', $card->id)->first();
+                ->where('credit_card.id', $card->id)
+                ->first();
 
             $card->total = $expenseCreditCard->total;
             $ar[] = $card;

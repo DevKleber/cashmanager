@@ -32,7 +32,6 @@ class TransactionItem extends Model
                     $dia = (int) date("d");
                     if ((int) date("d") <= (int) $creditCard->closing_day) {
                         $dayCloseCard = true;
-
                     }
                 }
 
