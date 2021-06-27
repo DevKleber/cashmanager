@@ -22,23 +22,30 @@ class TransactionItem extends Model
         $oneDay = 1;
         $dayCloseCard = false;
 
-        if (!$ar['is_income'] && $ar['installment']) {
-            $parceledValue = $transaction->value / $ar['installment'];
+        if (!$ar['is_income']) {
+            if ($ar['installment']) {
 
-            if ($ar['id_creditcard']) {
-                $creditCard = \App\CreditCard::find($ar['id_creditcard']);
-
-                if ($creditCard) {
-                    $dia = (int) date("d");
-                    if ((int) date("d") <= (int) $creditCard->closing_day) {
-                        $dayCloseCard = true;
+                $parceledValue = $transaction->value / $ar['installment'];
+    
+                if ($ar['id_creditcard']) {
+                    $creditCard = \App\CreditCard::find($ar['id_creditcard']);
+    
+                    if ($creditCard) {
+                        $dia = (int) date("d");
+                        if ((int) date("d") <= (int) $creditCard->closing_day) {
+                            $dayCloseCard = true;
+                        }
                     }
+    
+                } else {
+                    $dayCloseCard = true;
                 }
-
-            } else {
-                $dayCloseCard = true;
             }
 
+        } else {
+            if ($ar['installment']) {
+                $oneDay = 0;
+            }
         }
 
 
