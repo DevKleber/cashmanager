@@ -43,7 +43,9 @@ class CreditCard extends Model
             ->where('credit_card.id_user', auth('api')->user()->id)
             ->whereRaw("MONTH(transaction_item.due_date) = {$month}")
             ->whereRaw("YEAR(transaction_item.due_date) = {$year}")
-            ->where('credit_card.id', $creditCard->id)->get();
+            ->where('credit_card.id', $creditCard->id)
+            ->orderBy("transaction_item.id", "desc")
+            ->get();
         
         $total = 0;
         foreach ($expenseCreditCard as $key => $value) {
