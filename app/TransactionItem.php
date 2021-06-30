@@ -21,12 +21,13 @@ class TransactionItem extends Model
         $parceledValue = $transaction->value;
         $oneDay = 1;
         $dayCloseCard = false;
+        $incomeInstallment = false;
 
         if (!$ar['is_income']) {
             if ($ar['installment']) {
 
                 $parceledValue = $transaction->value / $ar['installment'];
-    
+                
                 if ($ar['id_creditcard']) {
                     $creditCard = \App\CreditCard::find($ar['id_creditcard']);
     
@@ -45,6 +46,7 @@ class TransactionItem extends Model
         } else {
             if ($ar['installment']) {
                 $oneDay = 0;
+                $incomeInstallment = true;
             }
         }
 
@@ -60,7 +62,7 @@ class TransactionItem extends Model
             $item['currenct_installment'] = ($i + 1);
             $item['installment'] = $ar['installment'];
             $item['is_paid'] = $ar['is_paid'];
-            $item['due_date'] = self::formatDueDate($ar, ($i + $oneDay), $dayCloseCard);
+            $item['due_date'] = self::formatDueDate($ar, ($i + $oneDay), $dayCloseCard, $incomeInstallment);
             $id = self::create($item);
 
             if (!$id) {
@@ -70,7 +72,7 @@ class TransactionItem extends Model
         return true;
     }
 
-    public static function formatDueDate($ar, $mountIncrement, $dayCloseCard)
+    public static function formatDueDate($ar, $mountIncrement, $dayCloseCard, $incomeInstallment)
     {
         $due_date = $ar['due_date'];
         $is_paid = $ar['is_paid'];
@@ -86,7 +88,7 @@ class TransactionItem extends Model
             return $due_date;
         }
 
-        if (($ar['is_income'] && $mountIncrement > 0) || $dayCloseCard) {
+        if (($ar['is_income'] && $mountIncrement > 0 && !$incomeInstallment) || $dayCloseCard) {
             $mountIncrement = $mountIncrement - 1;
         }
 

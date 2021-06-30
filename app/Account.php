@@ -43,6 +43,7 @@ class Account extends Model
             ->where('account.id', $id)
             ->whereRaw("MONTH(transaction.created_at) = {$month}")
             ->whereRaw("YEAR(transaction.created_at) = {$year}")
+            ->orderBy("transaction.id", "desc")
             ->get()
         ;
     }
