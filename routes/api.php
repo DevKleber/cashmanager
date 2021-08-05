@@ -33,21 +33,25 @@ Route::group(['middleware' => 'apiJwt'], function () {
 
     Route::post('categories', 'CategoryController@store');
     Route::get('categories/{id}', 'CategoryController@show');
+    Route::delete('categories/{id}', 'CategoryController@destroy');
     Route::get('categories', 'CategoryController@index');
     Route::put('categories', 'CategoryController@update');
 
     Route::post('accounts', 'AccountController@store');
     Route::get('accounts/{id}', 'AccountController@show');
+    Route::delete('accounts/{id}', 'AccountController@destroy');
     Route::get('accounts', 'AccountController@index');
     Route::put('accounts', 'AccountController@update');
 
     Route::post('credit-card', 'CreditCardController@store');
     Route::get('credit-card/{id}', 'CreditCardController@show');
+    Route::delete('credit-card/{id}', 'CreditCardController@destroy');
     Route::get('credit-card', 'CreditCardController@index');
     Route::put('credit-card', 'CreditCardController@update');
 
     Route::post('transactions', 'TransactionController@store');
     Route::get('transactions/{id}', 'TransactionController@show');
+    Route::delete('transactions/{id}', 'TransactionController@destroy');
     Route::get('transactions', 'TransactionController@index');
     Route::put('transactions', 'TransactionController@update');
 
